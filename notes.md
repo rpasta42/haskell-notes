@@ -261,7 +261,7 @@
               element satisfies predicate
             - `:t partition`
                - `partition :: (a -> Bool) -> [a] -> ([a], [a])`
-            - partition ```(`elem` ['A'..'Z'] "Hello World")```
+            - partition ```haskell (`elem` ['A'..'Z'] "Hello World")```
                - returns: `("HW", "ello orld")`
 
 
