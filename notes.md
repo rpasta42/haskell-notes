@@ -132,12 +132,155 @@
       - Complex Numbers module
 
    - STD module:
+      - Data.Char
+         - Other functions
+            - generalCategory
+               - `:t generalCategory`
+                  - `generalCategory :: Char -> GeneralCategory`
+               - GeneralCategory
+                  - `Space`/`UppercaseLetter`/`LowercaseLetter`/
+                    `OtherPunctuation`/`DecimalNumber`/`Control`/`MathSymbol`
+            - toUpper = converts Char to upper-case
+            - toLower = converts to lower-case
+            - toTitle = same as uppercase
+            - digitToInt = converts char to Int
+               - needs to be `['0'..'9'] || ['a'..'f'] || ['A'..'F']`
+            - intToDigit = opposite of digitToInt
+               - `intToDigit 15 => 'f'`
+            - ord = convert to ASCII number
+               - `ord 'a' => 97`
+            - chr = convert number to ASCII char
+               - `chr 97 => 'a'`
+         - predicates
+            - `Char -> Bool`
+            - Predicate Functions
+               - `isControl` = checks if control character
+               - `isSpace` = is space/tab/newline
+               - `isLower` = is lowercase
+                  - returns False on space
+               - `isUpper` = is uppercase
+               - `isAlpha` = is letter
+               - `isAlphaNum` = letter or number
+               - `isPrint` = is printable
+                  - control characters aren't printable
+               - `isDigit` = is digit
+               - `isOctDigit` = is octal digit
+               - `isHexDigit` = is hex digit
+               - `isLetter` = is letter
+               - `isMark` = unicode Mark character
+                  - check for letters with accent
+               - `isNumber` = is numeric
+               - `isPunctuation` = is punctuation
+               - `isSymbol` = math/currency symbol
+               - `isSeparator` = Unicode spaces and separators
+               - `isAscii` = first 128 characters of Unicode
+               - `isLatin1` = first 256 chars of Unicode
+               - `isAsciiUpper` = ASCII uppercase
+               - `isAsciiLower` = ASCII lowercase
+            - ex: `all isAlphaNum "bobby283"`
+               - returns `True`
+            - ex: simulate words
+               - `filter (not . any isSpace) . groupBy ((==) `on` isSpace) $ "hey guys its me"`
+      - Data.Map
+         - association list (aka dictionary) for key-value pairs
+         - `Map.fromList`
+            - `:t Map.fromList`
+               - `Map.fromList :: Ord k => [(k, a)] -> Map.Map k a`
+            - `import qualified Data.Map as Map`
+            - `Map.fromList [("key", "val"), ("key", "val")]`
+               - converts list to map
+         - `Map.empty`
+            - `ghci>Map.empty`
+               - returns `fromList []`
+         - `Map.insert`
+            - `Map.insert 3 100 Map.empty`
+               - returns `fromList [(3, 100)]`
+         - `Map.null`
+            - returns if Map is empty
+            - `Map.null Map.empty`
+               - returns `True`
+         - `Map.size`
+            - number of key-item pairs
+         - `Map.singleton`
+            - returns map with exactly one mapping
+            - `Map.insert 5 9 $ Map.singleton 3 9`
+               - returns `fromList [(3,9), (5, 9)]`
+         - `Map.member`
+            - predicate that takes key and map and
+              returns whether the key is in the map
+            - `Map.member 3 $ Map.fromList [(2, 5), (4, 5)]`
+               - returns `False`
+         - `Map.lookup`
+            - takes key and returns Maybe (Just val
+            - if key is in Map, otherwise Nothing)
+         - `Map.map`
+            - like list map
+         - `Map.fiter`
+            - like list filter
+         - `Map.toList`
+            - convert map to list (opposite of fromList)
+         - `Map.keys`
+            - returns all keys
+            - same as `map fst . Map.toList`
+         - `Map.elems`
+            - returns all elements of Map
+            - same as `map snd . Map.toList`
+         - `Map.fromListWith`
+            - takes function to combine duplicates
+            - `:t Map.fromListWith`
+               - `:: Ord k => (a -> a - a) -> [(k, a)] -> Map.Map k a`
+            - phonebook has multiple numbers for same person,
+              so we add them to one key using comma
+               - `phoneBookToMap xs = Map.fromListWith (\ number1 number2 -> number1 ++ ", " ++ number2) xs`
+               - can also make every value in phonebook a singleton list
+                  - `phoneBookToMap :: (Ord k) => [(k, a)] -> Map.Map k [a]`
+                  - `phoneBookToMap xs = Map.fromListWith (++) $ map (\(k, v) -> (k, [v])) xs`
+            - map with list of number pairs, duplicate selects biggest number
+               - `Map.fromListWith max [(2, 3), (2, 5), (3, 10)]`
+                  - returns `fromList [(2, 5), (3, 10)]`
+            - map with list of number pairs, duplicate adds both numbers
+               - `Map.fromListWith (+) [(2, 3), (2, 5)]`
+         -
+
+      - Data.Function
+         - on
+            - `:t on`
+               - `on :: (b -> b -> c) -> (a -> b) -> a -> a -> c`
+            - definition
+               - ``` f `on` g = \x y -> f (g x) (g y)```
+            - `on (==) (> 0)`
+               - same as `\x y -> (x > 0) == (y > 0)`
+
       - Data.List
          - List Manipulation module
             - `import Data.List`
             - `nub :: Eq a => [a] -> [a]`
             - returns unique elements from list, and
               takes out duplicates
+         - generic versions
+            - length, take, drop, splitAt, !!, replicate
+              return Int instead of Integral or Num
+            - genericLength, genericTake, genericDrop,
+              genericSplitAt, genericIndex, genericReplicate
+         - by functions
+            - nub, delete, union, intersect, group
+               - use (==) to test for equality
+            - nubBy, deleteBy, unionBy, intersectBy, groupBy
+               - first argument is equality function
+                  - `a -> b -> Bool`
+               - often used with Data.Functions's on
+               - ``` groupBy ((==) `on` (> 0)) values ```
+            - sortBy, insertBy, maximumBy, minimumBy
+               - take a function that returns Ordering
+                  - `a -> a -> Ordering`
+               - `:t sortBy`
+                  - `sortBy :: (a -> a -> Ordering) -> [a] -> [a]`
+               - Ordering can be LT, EQ, GT
+               - `sort` is same as `sortBy compare`
+            - compare lists based on length instead of lexicographically
+               - ```sortBy (compare `on` length) [[], [1, 2, 5], [1, 2]]```
+
+      - Functions
          - intersperse
             - `intersperse :: a -> [a] -> [a]`
             - `intersperse '.' "MONKEY"`
@@ -263,6 +406,84 @@
                - `partition :: (a -> Bool) -> [a] -> ([a], [a])`
             - partition ```haskell (`elem` ['A'..'Z'] "Hello World")```
                - returns: `("HW", "ello orld")`
+         - find
+            - takes a list and a predicate, returns
+              first element that satisfies predicate
+            - `:t find`
+               - `find :: (a -> Bool) -> [a] -> Maybe a`
+            - `find (>3) [1, 3, 4, 8]`
+               - returns `Just 4`
+            - `find (>9) [1, 2, 4, 8`
+               - returns `Nothing`
+         - elemIndex
+            - similar to elem, but returns `Maybe Int`
+            - `:t elemIndex`
+               - `elemIndex :: (Eq a) => a -> [a] -> Maybe Int`
+            - `elemIndex 4 [1, 2, 3, 4, 5]`
+               - returns `Just 3`
+         - elemIndices
+            - same as elemIndices, but returns all
+              of them instead of just first
+            - failure is empty list
+         - findIndex/findIndices
+            - same as find, but with indices
+            - `:t findIndex`
+               - `findIndex :: (a -> Bool) -> [a] -> Maybe Int`
+            - `:t findIndices`
+               - `findIndices :: (a -> Bool) -> [a] -> [Int]`
+            - `findIndices (`elem` ['A'..'Z']) "Where Are Caps?"`
+               - returns `[0, 6, 10]`
+         - zip/zipWith
+            - `:t zip`
+               - `zip :: [a] -> [b] -> [(a, b)]`
+            - `:t zipWith`
+               - `zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]`
+            - zip/zipWith varients go up to 7
+               - zip, zip3, zip4, zip5, zip6, zip7
+               - zipWith, zipWith3, zipWith4, ...
+            - `zipWith3 (\x y z -> x+y+z) [1, 2] [4, 5] [2, 2]`
+               - returns `[7, 9]`
+         - lines
+            - returns every line of a string in a list
+         - unlines
+            - takes list of strings, returns 1 string with lines
+         - words
+            - splits word string into list of strings
+         - unwords
+            - takes list and returns 1 string with spaces
+         - nub
+            - takes list, weeds out duplicates
+         - delete
+            - takes element and list, and deletes
+              first occurance of element
+            - `delete 'h' "hey there"`
+               - returns: `"ey there"`
+         - `\\` (list difference)
+            - removes first occurance of every video
+            - similar to set difference
+            - `[1..10] \\ [2, 5, 9]`
+               - returns `[1, 3, 4, 6, 8, 10]`
+         - union
+            - appends stuff from second list into first
+            - duplicates get removed
+            - ```"hey man" `union` "what's up"`
+               - returns `"key manwt'sup"`
+         - intersect
+            - takes 2 lists and returns elements in common
+         - insert
+            - inserts element into list
+            - searches until finds element that's equal or
+              greater than item being inserted and inserts
+              just before that element
+            - if inserted in sorted list, result will stay sorted
+            - `:t insert`
+               - `insert :: (Ord a) => a -> [a] -> [a]`
+            - `insert 4 [3,5,1,2,8,2]`
+               - returns `[3,4,5,1,2,8,2]`
+            - `insert 4 [1,3,4,4,1]`
+               - returns `[1,3,4,4,4,1]`
+
+
 
 
 - TODO:

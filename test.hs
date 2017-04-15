@@ -130,6 +130,39 @@ search needle haystack =
             (tails haystack)
 
 
+-- ## custom dictionary
+
+phoneBook =
+   [ ("bob", "555-5432")
+   , ("michael", "235-403-2813")
+   , ("brian", "321-345-5683")
+   ]
+
+--throws
+findKey1 :: (Eq a) => [(a, b)] -> a -> b
+findKey1 dict key = snd . head . filter (\(a, b) -> a == key) $ dict
+
+
+--good maybe version
+findKey2 :: (Eq a) => [(a, b)] -> a -> Maybe b
+findKey2 [] _ = Nothing
+findKey2 ((k, v):xs) key = if key == k
+   then Just v
+   else findKey2 xs key
+
+
+--best: using foldr reverse key/dict args
+findKey3 :: (Eq a) => a -> [(a, b)] -> Maybe b
+findKey3 key dict = foldr
+   (\(k,v) acc -> if k==key then Just v else acc)
+   Nothing
+   dict
+--or
+findKey3 key = foldr
+   (\(k,v) acc -> if k==key then Just v else acc)
+   Nothing
+
+
 
 
 
