@@ -158,11 +158,24 @@ findKey3 key dict = foldr
    Nothing
    dict
 --or
-findKey3 key = foldr
+findKey3' key = foldr
    (\(k,v) acc -> if k==key then Just v else acc)
    Nothing
 
 
 
+
+
+---- ## 500 datastructures
+-- https://www.reddit.com/r/programming/comments/65njzp/500_data_structures_and_algorithms_interview/
+
+--1: http://www.techiedelight.com/find-pair-with-given-sum-array/
+findPair :: (Num a, Eq a) => a -> [a] -> Maybe (a, a, Int, Int)
+
+findPair _ [] = Nothing
+findPair _ [_] = Nothing
+findPair sum (x:xs) = if elem (sum - x) xs
+   then Just (x, (sum-x), 0, 0)
+   else findPair sum xs
 
 
