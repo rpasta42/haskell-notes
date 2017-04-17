@@ -184,64 +184,114 @@
                - `filter (not . any isSpace) . groupBy ((==) `on` isSpace) $ "hey guys its me"`
       - Data.Map
          - association list (aka dictionary) for key-value pairs
-         - `Map.fromList`
-            - `:t Map.fromList`
-               - `Map.fromList :: Ord k => [(k, a)] -> Map.Map k a`
-            - `import qualified Data.Map as Map`
-            - `Map.fromList [("key", "val"), ("key", "val")]`
-               - converts list to map
-         - `Map.empty`
-            - `ghci>Map.empty`
-               - returns `fromList []`
-         - `Map.insert`
-            - `Map.insert 3 100 Map.empty`
-               - returns `fromList [(3, 100)]`
-         - `Map.null`
-            - returns if Map is empty
-            - `Map.null Map.empty`
-               - returns `True`
-         - `Map.size`
-            - number of key-item pairs
-         - `Map.singleton`
-            - returns map with exactly one mapping
-            - `Map.insert 5 9 $ Map.singleton 3 9`
-               - returns `fromList [(3,9), (5, 9)]`
-         - `Map.member`
-            - predicate that takes key and map and
-              returns whether the key is in the map
-            - `Map.member 3 $ Map.fromList [(2, 5), (4, 5)]`
-               - returns `False`
-         - `Map.lookup`
-            - takes key and returns Maybe (Just val
-            - if key is in Map, otherwise Nothing)
-         - `Map.map`
-            - like list map
-         - `Map.fiter`
-            - like list filter
-         - `Map.toList`
-            - convert map to list (opposite of fromList)
-         - `Map.keys`
-            - returns all keys
-            - same as `map fst . Map.toList`
-         - `Map.elems`
-            - returns all elements of Map
-            - same as `map snd . Map.toList`
-         - `Map.fromListWith`
-            - takes function to combine duplicates
-            - `:t Map.fromListWith`
-               - `:: Ord k => (a -> a - a) -> [(k, a)] -> Map.Map k a`
-            - phonebook has multiple numbers for same person,
-              so we add them to one key using comma
-               - `phoneBookToMap xs = Map.fromListWith (\ number1 number2 -> number1 ++ ", " ++ number2) xs`
-               - can also make every value in phonebook a singleton list
-                  - `phoneBookToMap :: (Ord k) => [(k, a)] -> Map.Map k [a]`
-                  - `phoneBookToMap xs = Map.fromListWith (++) $ map (\(k, v) -> (k, [v])) xs`
-            - map with list of number pairs, duplicate selects biggest number
-               - `Map.fromListWith max [(2, 3), (2, 5), (3, 10)]`
-                  - returns `fromList [(2, 5), (3, 10)]`
-            - map with list of number pairs, duplicate adds both numbers
-               - `Map.fromListWith (+) [(2, 3), (2, 5)]`
-         -
+         - Functions
+            - `Map.fromList`
+               - `:t Map.fromList`
+                  - `Map.fromList :: Ord k => [(k, a)] -> Map.Map k a`
+               - `import qualified Data.Map as Map`
+               - `Map.fromList [("key", "val"), ("key", "val")]`
+                  - converts list to map
+            - `Map.empty`
+               - `ghci>Map.empty`
+                  - returns `fromList []`
+            - `Map.insert`
+               - `Map.insert 3 100 Map.empty`
+                  - returns `fromList [(3, 100)]`
+            - `Map.null`
+               - returns if Map is empty
+               - `Map.null Map.empty`
+                  - returns `True`
+            - `Map.size`
+               - number of key-item pairs
+            - `Map.singleton`
+               - returns map with exactly one mapping
+               - `Map.insert 5 9 $ Map.singleton 3 9`
+                  - returns `fromList [(3,9), (5, 9)]`
+            - `Map.member`
+               - predicate that takes key and map and
+                 returns whether the key is in the map
+               - `Map.member 3 $ Map.fromList [(2, 5), (4, 5)]`
+                  - returns `False`
+            - `Map.lookup`
+               - takes key and returns Maybe (Just val
+               - if key is in Map, otherwise Nothing)
+            - `Map.map`
+               - like list map
+            - `Map.fiter`
+               - like list filter
+            - `Map.toList`
+               - convert map to list (opposite of fromList)
+            - `Map.keys`
+               - returns all keys
+               - same as `map fst . Map.toList`
+            - `Map.elems`
+               - returns all elements of Map
+               - same as `map snd . Map.toList`
+            - `Map.fromListWith`
+               - takes function to combine duplicates
+               - `:t Map.fromListWith`
+                  - `:: Ord k => (a -> a - a) -> [(k, a)] -> Map.Map k a`
+               - phonebook has multiple numbers for same person,
+                 so we add them to one key using comma
+                  - `phoneBookToMap xs = Map.fromListWith (\ number1 number2 -> number1 ++ ", " ++ number2) xs`
+                  - can also make every value in phonebook a singleton list
+                     - `phoneBookToMap :: (Ord k) => [(k, a)] -> Map.Map k [a]`
+                     - `phoneBookToMap xs = Map.fromListWith (++) $ map (\(k, v) -> (k, [v])) xs`
+               - map with list of number pairs, duplicate selects biggest number
+                  - `Map.fromListWith max [(2, 3), (2, 5), (3, 10)]`
+                     - returns `fromList [(2, 5), (3, 10)]`
+               - map with list of number pairs, duplicate adds both numbers
+                  - `Map.fromListWith (+) [(2, 3), (2, 5)]`
+            - `Map.insertWith`
+               - if key is already in map, determines what to add instead
+               - function argument: pair of values with equivelent keys
+               - `Map.insertWith (+) 3 100 $ Map.fromList [(3, 4), (5, 6)]`
+                  - returns `fromList [(3, 104), (5, 6)]`
+
+
+      - Data.Set
+         - all elements are unique
+         - can map and filter over sets
+         - converting list to from set is a lot faster than using nub
+         - ordered
+            - stored in trees
+            - checking membership, inserting, deleting
+              is much faster than List
+         - clashes Prelude data so need to import like this:
+            - `import qualified Data.Set as Set`
+         - Functions
+            - `Set.fromList`
+               - `:t Set.fromList`
+                  - `Set.fromList :: Ord a => [a] -> Set.Set a`
+               - `Set.fromList "Hello world"`
+                  - returns `fromList " Hdelorw"`
+            - `Set.toList`
+            - `Set.intersection`
+               - takes 2 sets and returns elements in common
+            - `Set.difference`
+               - takes 2 sets
+               - returns elements in first set, which are not in second
+            - `Set.union`
+               - union of 2 sets (all together)
+            - `Set.null`
+               - is empty set
+            - `Set.empty`
+               - returns empty set
+            - `Set.size`
+               - returns length of a set
+            - `Set.singleton`
+               - returns set with 1 item
+               - `Set.singleton 9`
+            - `Set.insert`
+               - insert into set and return a new one
+               - `Set.insert 4 $ Set.fromList [5..10]`
+            - `Set.delete`
+               - delete item from set
+               - `Set.Delete 4 $ Set.fromList [3..5]`
+            - `Set.isSubsetOf`
+            - `Set.isProperSubsetOf`
+            - `Set.map`
+            - `Set.filter`
 
 
 
@@ -487,9 +537,45 @@
                - returns `[1,3,4,4,4,1]`
 
 
+
+
 - Typeclasses
    - multiple typclasses in signature
       - `f :: (Num a, Eq a) => a -> a`
+
+   - vocab
+      - concrete type = fully applied type without parameters
+   - possible things to derive in ADT
+      - Eq, Ord, Show, Read
+      - Bounded
+         - `minBound :: Int`
+            - returns lowest possible integer
+         - `maxBound :: Int`
+            - maximum integer
+      - Enum
+         - `succ 1`
+            - returns next
+         - `pred 1`
+            - returns previous
+         - `[1..5]`
+            - returns range
+      - Eq/Ord
+         - `==`, `>`
+         - Ord: `compare`
+      - Read
+         - `read "Person {firstName =\"Michael\",lastName =\"Diamond\", age = 43}" :: Person`
+            - returns Person as an Object
+   - ADT
+      - `data Maybe a = Nothing | Just a`
+      - `:k`
+         - can be used on any time
+         - `:k Maybe`
+            - returns: `Maybe :: * -> *`
+         - `:k Int`
+            - `Int :: *`
+         - `:k Num`
+            - `Num :: * -> GHC.Prim.Constraint`
+
 
 - TODO:
    - implement foldl1 foldr1, scans, etc

@@ -1,4 +1,4 @@
-import Data.List (tails, elemIndex)
+import Data.List (tails, elemIndex, inits)
 
 --putStr or putStrLn
 v1 = "test \n foo"
@@ -219,13 +219,16 @@ search' :: (Eq a, Num a) => ([a] -> Bool) -> [a] -> [[a]]
 search' pred xs =
    foldl (\ret sub ->
             let subs = map (\a -> take a sub) [1..length sub]
-                good = foldl (\acc x -> if pred x then acc++x else acc)
+                good = foldl (\acc x -> if pred x then acc++[x] else acc)
                              []
                              subs
-            in ret ++ [good])
+            in ret ++ good)
 
          []
          (tails xs)
 
-subs0Sum = search' (\x -> sum x == 0)
+subs0Sum xs = filter (not . null) $ search' (\x -> sum x == 0) xs
 --subs0Sum [4, 2, -3, -1, 0, 4]
+
+
+

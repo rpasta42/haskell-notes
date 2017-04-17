@@ -616,3 +616,85 @@ search needle haystack =
             False
             (tails haystack)
 
+
+
+-- ## making your own mudles
+
+-- # module creation ex 1
+
+----Geometry.hs
+module Geometry
+( sphereVolume
+, sphereArea
+) where
+
+--or
+module Geometry
+( * ) where
+
+sphereVolume :: Float -> Float
+sphereVolume radius = (4.0 / 3.0) * pi * (radius ^ 3)
+
+sphereArea :: Float -> Float
+sphereArea radius = 4 * pi * (radius ^ 2)
+
+--not exported
+helper blah = 3
+
+
+----to use module
+import Geometry
+
+
+-- # module creation ex 2
+
+-- #hierarchical structure
+--1.) make folder Geometry
+--2.) Geometry has 2 files:
+--    Sphere.hs, Cube.hs, Cuboid.hs
+--3.) Cube.hs uses Cuboid.hs stuff
+
+----Sphere.hs:
+module Geometry.Sphere
+( volume
+, area
+) where
+
+--define volume volume ...
+--define area ...
+
+----Cuboid.hs
+module Geometry.Cuboid
+( volume
+, area
+) where
+
+volume :: Float -> Float -> Float -> Float
+volume a b c = rectangleArea a b * c
+
+area :: Float -> Float -> Float -> Float
+area a b c = rectangleArea a b * 2 + rectangleArea
+a c * 2 + rectangleArea c b * 2
+
+rectangleArea :: Float -> Float -> Float
+rectangleArea a b = a * b
+
+----Cube.hs
+module Geometry.Cube
+( volume
+, area
+) where
+
+import qualified Geometry.Cuboid as Cuboid
+
+volume :: Float -> Float
+volume side = Cuboid.volume side side side
+
+area side = Cuboid.area side side side
+
+
+
+
+
+
+
