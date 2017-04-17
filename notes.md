@@ -126,6 +126,7 @@
          - `import qualified Data.Map as M`
          - usage ex: `M.filter`
 
+
    - Haskell standard library is split into Modules
       - Prelude modules is loaded by default
       - Concurrency module
@@ -241,6 +242,8 @@
             - map with list of number pairs, duplicate adds both numbers
                - `Map.fromListWith (+) [(2, 3), (2, 5)]`
          -
+
+
 
       - Data.Function
          - on
@@ -484,7 +487,9 @@
                - returns `[1,3,4,4,4,1]`
 
 
-
+- Typeclasses
+   - multiple typclasses in signature
+      - `f :: (Num a, Eq a) => a -> a`
 
 - TODO:
    - implement foldl1 foldr1, scans, etc

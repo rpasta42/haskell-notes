@@ -1,4 +1,4 @@
-import Data.List (tails)
+import Data.List (tails, elemIndex)
 
 --putStr or putStrLn
 v1 = "test \n foo"
@@ -167,15 +167,65 @@ findKey3' key = foldr
 
 
 ---- ## 500 datastructures
+
 -- https://www.reddit.com/r/programming/comments/65njzp/500_data_structures_and_algorithms_interview/
 
---1: http://www.techiedelight.com/find-pair-with-given-sum-array/
-findPair :: (Num a, Eq a) => a -> [a] -> Maybe (a, a, Int, Int)
+-- ## Ex 1:
+--http://www.techiedelight.com/find-pair-with-given-sum-array/
 
-findPair _ [] = Nothing
-findPair _ [_] = Nothing
-findPair sum (x:xs) = if elem (sum - x) xs
+--v1:
+findPair1 :: (Num a, Eq a) => a -> [a] -> Maybe (a, a, Int, Int)
+
+findPair1 _ [] = Nothing
+findPair1 _ [_] = Nothing
+findPair1 sum (x:xs) = if elem (sum - x) xs
    then Just (x, (sum-x), 0, 0)
-   else findPair sum xs
+   else findPair1 sum xs
 
 
+--v2:
+elimMaybe (Just x) = x
+
+findPair2' :: (Num a, Eq a) => a -> [a] -> Int -> Maybe (a, a, Int, Int)
+findPair2' _ [] _ = Nothing
+findPair2' _ [_] _ = Nothing
+findPair2' sum lst@(x:xs) index1 =
+   let x2 = (sum-x)
+       isElem = elemIndex x2 xs
+   in case isElem of
+         Nothing -> findPair2' sum xs (index1+1)
+         Just i2 -> Just (x, (sum-x), index1, index1+i2+1)
+
+findPair2 :: (Num a, Eq a) => [a] -> a -> Maybe (a, a, Int, Int)
+findPair2 xs sum = findPair2' sum xs 0
+
+printResFindPair :: (Show a) => Maybe (a, a, Int, Int) -> IO ()
+printResFindPair Nothing = putStrLn "Error"
+printResFindPair (Just (x1, x2, i1, i2)) =
+   putStrLn $ "Pair Found at Index " ++ (show i1) ++ " and "
+               ++ (show i2) ++ " (" ++ (show x1)
+               ++ " + " ++ (show x2) ++ ")"
+
+--ghci test:
+--printResFindPair $ findPair2 [8, 7, 2, 5, 3, 1] 10
+
+
+
+-- ## Ex 2:
+--http://www.techiedelight.com/find-sub-array-with-0-sum/
+
+--print all sub-array with 0 sum
+search' :: (Eq a, Num a) => ([a] -> Bool) -> [a] -> [[a]]
+search' pred xs =
+   foldl (\ret sub ->
+            let subs = map (\a -> take a sub) [1..length sub]
+                good = foldl (\acc x -> if pred x then acc++x else acc)
+                             []
+                             subs
+            in ret ++ [good])
+
+         []
+         (tails xs)
+
+subs0Sum = search' (\x -> sum x == 0)
+--subs0Sum [4, 2, -3, -1, 0, 4]
