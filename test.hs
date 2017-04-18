@@ -172,6 +172,10 @@ findKey3' key = foldr
 data Tree a = EmptyTree | Node a (Tree a) (Tree a)
               deriving (Show, Read, Eq)
 
+--data Tree a = EmptyTree | Node { item :: a, left :: Tree a, right :: Tree a }
+--              deriving (Show, Read, Eq)
+
+
 singleton :: a -> Tree a
 singleton x = Node x EmptyTree EmptyTree
 
@@ -182,13 +186,17 @@ treeInsert x (Node a left right)
    | x < a = Node a (treeInsert x left) right
    | x > a = Node a left (treeInsert x right)
 
-treeFromList :: (Ord a) => [a] -> Tree a
-treeFromList = treeFromList'
 
 treeFromList' :: (Ord a) => Tree a -> [a] -> Tree a
 treeFromList' tree [] = tree
-treeFromList' [x] = singleton x
-treeFromList' (x:xs)
+treeFromList' tree (x:xs) = treeFromList' (treeInsert x tree) xs
+
+
+treeFromList :: (Ord a) => [a] -> Tree a
+--treeFromList = treeFromList' EmptyTree
+treeFromList = foldr treeInsert EmptyTree
+
+
 
 
 treeElem :: (Ord a) => a -> Tree a -> Bool

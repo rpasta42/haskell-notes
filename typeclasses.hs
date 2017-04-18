@@ -179,6 +179,38 @@ Empty .++ ys = ys
 (x :-: xs) .++ ys = x :-: (xs .++ ys)
 
 
----- ### Binary search tree
+---- ## Binary search tree
 --see test.hs
+
+
+---- ### Making typeclasses
+
+-- # ex 1:
+
+class Eq a where
+   (==) :: a -> a -> Bool
+   (/=) :: a -> a -> Bool
+   x == y = not (x /= y)
+   x /= y = not (x == y)
+
+-- # ex 2:
+
+data TrafficLight = Red | Yellow | Green
+
+instance Eq TrafficLight where
+   Red == Red = True
+   Green == Green = True
+   Yellow == Yellow = True
+   _ == _ = False
+
+instance Show TrafficLight where
+   show Red = "Red light"
+   show Yellow = "Yellow light"
+   show Green = "Green light"
+
+
+
+
+
+
 

@@ -540,11 +540,13 @@
 
 
 - Typeclasses
+   - defines some behavior and types that can behave in that way are made instances
    - multiple typclasses in signature
       - `f :: (Num a, Eq a) => a -> a`
 
    - vocab
       - concrete type = fully applied type without parameters
+
    - possible things to derive in ADT
       - Eq, Ord, Show, Read
       - Bounded
