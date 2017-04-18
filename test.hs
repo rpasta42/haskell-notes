@@ -130,6 +130,7 @@ search needle haystack =
             (tails haystack)
 
 
+
 -- ## custom dictionary
 
 phoneBook =
@@ -164,9 +165,42 @@ findKey3' key = foldr
 
 
 
+---- #### typeclasses/ADT
+
+--binary search tree
+
+data Tree a = EmptyTree | Node a (Tree a) (Tree a)
+              deriving (Show, Read, Eq)
+
+singleton :: a -> Tree a
+singleton x = Node x EmptyTree EmptyTree
+
+treeInsert :: (Ord a) => a -> Tree a -> Tree a
+treeInsert x EmptyTree = singleton x
+treeInsert x (Node a left right)
+   | x == a = Node x left right
+   | x < a = Node a (treeInsert x left) right
+   | x > a = Node a left (treeInsert x right)
+
+treeFromList :: (Ord a) => [a] -> Tree a
+treeFromList = treeFromList'
+
+treeFromList' :: (Ord a) => Tree a -> [a] -> Tree a
+treeFromList' tree [] = tree
+treeFromList' [x] = singleton x
+treeFromList' (x:xs)
 
 
----- ## 500 datastructures
+treeElem :: (Ord a) => a -> Tree a -> Bool
+treeElem _ EmptyTree = False
+treeElem x (Node a left right)
+   | x == a = True
+   | x < a  = treeElem x left
+   | x > a  = treeElem x right
+
+
+
+---- #### 500 datastructures
 
 -- https://www.reddit.com/r/programming/comments/65njzp/500_data_structures_and_algorithms_interview/
 
@@ -229,6 +263,8 @@ search' pred xs =
 
 subs0Sum xs = filter (not . null) $ search' (\x -> sum x == 0) xs
 --subs0Sum [4, 2, -3, -1, 0, 4]
+
+
 
 
 

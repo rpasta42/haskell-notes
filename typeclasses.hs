@@ -92,8 +92,14 @@ tellPerson (Person {firstName=f, lastName=l}) = f ++ l
 -- ## Type parameters
 
 -- # ex1:
-
 data Maybe a = Nothing | Just a
+
+-- # ex2:
+data Either a b = Left a | Right b deriving (Eq, Ord, Read, Show)
+
+--:t Right 'a'
+--Right 'a' :: Either a Char
+
 
 -- # to view types:
 --:k Maybe
@@ -134,6 +140,7 @@ read "Saturday" :: Day --opposite
 [minBound .. maxBound] :: [Day] --lists all days
 
 
+
 ---- ### Type synonyms
 
 -- ## Basic usage
@@ -153,5 +160,25 @@ type AssocList k v = [(k, v)]
 
 
 
+---- ### Recursive data structures
 
+--ex1 (list):
+data List a = Empty | Cons a (List a) deriving (Show, Read, Eq, Ord)
+
+--ex2 (list with infix cons operator):
+infixr 5 :-:
+data List a = Empty | a :-: (List a) deriving (Show, Read, Eq, Ord)
+
+--usage
+3 :-: 4 :-: 5 :-: Empty
+
+--ex3 (list addition)
+infixr 5 .++
+(.++) :: List a -> List a -> List a
+Empty .++ ys = ys
+(x :-: xs) .++ ys = x :-: (xs .++ ys)
+
+
+---- ### Binary search tree
+--see test.hs
 
