@@ -32,8 +32,8 @@ setlocal nodiff
 setlocal equalprg=
 setlocal errorformat=
 setlocal expandtab
-if &filetype != 'text'
-setlocal filetype=text
+if &filetype != 'haskell'
+setlocal filetype=haskell
 endif
 setlocal fixendofline
 setlocal foldcolumn=0
@@ -92,13 +92,13 @@ setlocal statusline=
 setlocal suffixesadd=
 setlocal swapfile
 setlocal synmaxcol=3000
-if &syntax != 'text'
-setlocal syntax=text
+if &syntax != 'haskell'
+setlocal syntax=haskell
 endif
 setlocal tabstop=6
 setlocal tagcase=
 setlocal tags=
-setlocal textwidth=50
+setlocal textwidth=290
 setlocal thesaurus=
 setlocal noundofile
 setlocal undolevels=-123456
@@ -107,190 +107,48 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-7,12fold
-17,21fold
-23,26fold
-28,48fold
-50,52fold
-54,55fold
-14,56fold
-73,78fold
-79,81fold
-82,87fold
-88,108fold
-58,108fold
-58,109fold
-115,129fold
-131,135fold
-137,141fold
-144,161fold
-164,187fold
-162,191fold
-143,191fold
-196,201fold
-202,204fold
-205,207fold
-208,211fold
-212,213fold
-214,217fold
-218,222fold
-223,225fold
-226,227fold
-228,229fold
-230,231fold
-232,234fold
-235,237fold
-238,252fold
-253,257fold
-195,257fold
-193,258fold
-271,275fold
-270,303fold
-260,304fold
-306,313fold
-321,325fold
-326,342fold
-345,348fold
-349,354fold
-355,358fold
-359,362fold
-363,367fold
-368,372fold
-373,378fold
-379,385fold
-386,394fold
-395,401fold
-402,409fold
-402,409fold
-410,413fold
-414,421fold
-422,428fold
-429,435fold
-436,443fold
-444,450fold
-451,457fold
-458,461fold
-462,469fold
-470,478fold
-479,484fold
-485,488fold
-489,496fold
-497,506fold
-507,508fold
-509,510fold
-511,512fold
-513,514fold
-515,516fold
-517,521fold
-522,526fold
-527,531fold
-532,533fold
-534,545fold
-344,546fold
-315,547fold
-549,562fold
-579,583fold
-584,586fold
-570,606fold
-111,608fold
-611,615fold
-617,620fold
-629,635fold
-636,638fold
-639,641fold
-622,642fold
-644,653fold
-655,657fold
-610,658fold
-674,678fold
-680,686fold
-666,687fold
-691,697fold
-699,701fold
-703,710fold
-712,713fold
-715,716fold
-718,721fold
-723,727fold
-729,737fold
-739,743fold
-745,746fold
-689,747fold
-661,763fold
-14
+15,17fold
+19,22fold
+24,27fold
+29,31fold
+13,32fold
+36,40fold
+45,50fold
+52,57fold
+59,70fold
+72,84fold
+86,94fold
+96,101fold
+103,116fold
+118,120fold
+122,124fold
+126,135fold
+137,147fold
+34,148fold
+152,161fold
+163,168fold
+170,175fold
+177,181fold
+183,188fold
+150,189fold
+13
 normal! zo
-14
+13
 normal! zc
-58
+34
 normal! zo
-58
-normal! zo
-58
+34
 normal! zc
-111
+150
 normal! zo
-143
-normal! zo
-162
-normal! zo
-162
+150
 normal! zc
-143
-normal! zc
-193
-normal! zo
-195
-normal! zo
-195
-normal! zc
-193
-normal! zc
-260
-normal! zo
-270
-normal! zo
-270
-normal! zc
-260
-normal! zc
-315
-normal! zo
-344
-normal! zo
-402
-normal! zo
-344
-normal! zc
-315
-normal! zc
-570
-normal! zo
-610
-normal! zo
-622
-normal! zo
-622
-normal! zc
-610
-normal! zc
-661
-normal! zo
-666
-normal! zo
-666
-normal! zc
-689
-normal! zo
-689
-normal! zc
-661
-normal! zc
-let s:l = 568 - ((458 * winheight(0) + 16) / 32)
+let s:l = 222 - ((27 * winheight(0) + 19) / 39)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-568
-normal! 046|
+222
+normal! 0
 let &so = s:so_save | let &siso = s:siso_save
 doautoall SessionLoadPost
 " vim: set ft=vim :
