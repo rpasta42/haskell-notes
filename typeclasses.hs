@@ -17,7 +17,7 @@ data Bool = False | True
 
 data Shape = Circle Float Float Float | Rectangle Float Float Float Float
 
---:t Circle
+-- :t Circle
 Circle :: Float -> Float -> Float -> Shape
 
 
@@ -185,6 +185,10 @@ Empty .++ ys = ys
 
 ---- ### Making typeclasses
 
+-- typeclass instances need to have concrete type, not type constructors
+-- typeclasses can take type constructors (like functor)
+
+
 -- # ex 1:
 
 class Eq a where
@@ -192,6 +196,7 @@ class Eq a where
    (/=) :: a -> a -> Bool
    x == y = not (x /= y)
    x /= y = not (x == y)
+
 
 -- # ex 2:
 
@@ -209,6 +214,174 @@ instance Show TrafficLight where
    show Green = "Green light"
 
 
+-- ## Typeclass subclass of other typeclass
+
+-- # ex 1 Number needs to be Eq first:
+
+class (Eq a) => Num a where
+   ...
+
+
+-- # ex 2 (Maybe Eq):
+
+--can't have function a -> Maybe, but can a -> Maybe a
+--this doesn't work
+instance Eq Maybe where
+   ...
+
+--m needs to be eq too, so this is also bad
+instance Eq (Maybe m) where
+   Just x == Just y     = x == y
+   Nothing == Nothing   = True
+   _ == _               = False
+
+--this is good version with class constraint
+instance (Eq m) => Eq (Maybe m) where
+   ...
+
+
+-- # ex 3 (yes-no typeclass):
+
+--type coercion like js
+
+class YesNo a where
+   yesno :: a -> Bool
+
+instance YesNo Int where
+   yesno 0 = False
+   yesno 1 = True
+
+instance YesNo [a] where
+   yesno [] = False
+   yesno _ = True
+
+instance YesNo Bool where
+   yesno = id
+
+instance YesNo (Maybe a) where
+   yesno (Just _) = True
+   yesno Nothing = False
+
+yesnoIf :: (YesNo y) => y -> a -> a -> a
+yesnoIf yesnoVal yesResult noResult = if yesno yesnoVal then yesResult else noResult
+
+
+
+
+---- ### Functor typeclass
+
+class Functor f where
+   fmap :: (a -> b) -> f a -> f b
+
+--f is a type constructor that takes type argument
+
+instance Functor [] where
+   fmap = map
+
+--not "instance Functor [a] where" because f
+--has to be type constructor that takes 1  type
+
+instance Functor Maybe where
+   fmap f (Just x) = Just (f x)
+   fmap f Nothing = Nothing
+
+instance Functor Tree where
+   fmap f EmptyTree = EmptyTree
+   fmap f (Node x leftsub rightsub) = Node (f x) (fmap f leftsub) (fmap f rightsub)
+
+instance Functor (Either a) where
+   fmap f (Right x) = Right (f x)
+   fmap f (Left x) = Left x
+
+--functor laws:
+--identity: fmap (\a -> a) should return same thing
+
+
+---- ### kinds
+
+-- values can only be concrete types
+-- * means concrete type
+
+-- # exs:
+
+--:k Int
+--Int :: *
+
+--:k Maybe
+--Maybe :: * -> *
+
+--:k Maybe Int
+--Maybe Int :: *
+
+--:k Either
+--Either :: * -> * -> *
+
+--:k Either String
+--Either String :: * -> *
+
+
+--:k Functor
+--Functor :: (* -> *) -> GHC.Prim.Constraint
+
+--:k Eq
+--Eq :: * -> GHC.Prim.Constraint
+
+
+-- ## type-foo tofu
+
+class Tofu t where
+   tofu :: j a -> t a j
+
+--:k Tofu
+--Tofu :: (* -> (* -> *) -> *) -> GHC.Prim.Constraint
+
+--:t tofu
+--tofu :: Tofu t => j a -> t a j
+
+--because "j a" is parameter, then it's :k is *
+--assume * for a
+--j has to have :k of "* -> *"
+--t produces concrete type and takes 2 types
+   -- :k t = * -> (* -> *) -> *
+
+-- # Frank
+
+data Frank a b = Frank {frankField :: b a} deriving (Show)
+--:k Frank :: * -> (* -> *) -> *
+
+--ex1:
+--Frank (Just 3)
+   --Frank { frankField = Just 3}
+
+--:t Frank (Just 3)
+   --Frank (Just 3) :: Num a => Frank a Maybe
+
+--:k Frank (Just 3)
+   -- Illegal type: 3
+
+
+--ex2:
+--:t Frank "Fds"
+   -- Frank "Fds" :: Frank Char []
+
+
+instance Tofu Frank where
+   tofu x = Frank x
+
+let x = tofu "fds"
+--:t x
+   -- x :: Tofu t -> t Char []
+
+
+
+-- ## type-foo Bary
+
+data Barry t k p = Barry { yabba :: p, dabba :: t k }
+--:k Barry --     t       k    p
+   --Barry :: (* -> *) -> * -> * -> *
+
+instance Functor (Barry a b) where
+   fmap f (barry {yabba = x, dabba = y}) = Barry {yabba=f x, dabba=y}
 
 
 

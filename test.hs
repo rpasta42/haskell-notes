@@ -1,4 +1,5 @@
 import Data.List (tails, elemIndex, inits)
+import qualified Data.Map as DMap
 
 --putStr or putStrLn
 v1 = "test \n foo"
@@ -196,9 +197,6 @@ treeFromList :: (Ord a) => [a] -> Tree a
 --treeFromList = treeFromList' EmptyTree
 treeFromList = foldr treeInsert EmptyTree
 
-
-
-
 treeElem :: (Ord a) => a -> Tree a -> Bool
 treeElem _ EmptyTree = False
 treeElem x (Node a left right)
@@ -206,6 +204,25 @@ treeElem x (Node a left right)
    | x < a  = treeElem x left
    | x > a  = treeElem x right
 
+
+--functor
+class Functor f where
+   fmap :: (a -> b) -> f a -> f b
+
+instance Main.Functor (DMap.Map a) where
+   fmap = DMap.map
+
+--Main.fmap (++"test") (DMap.fromList [("test", "yo"), ("ho", "no")])
+--returns: fromList [("ho","notest"),("test","yotest")]
+
+--type-foo
+class Tofu t where
+   tofu :: j a -> t a j
+
+data Frank a b = Frank {frankField :: b a} deriving (Show)
+
+instance Tofu Frank where
+   tofu x = Frank x
 
 
 ---- #### 500 datastructures

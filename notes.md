@@ -14,15 +14,16 @@
 - misc
    - ' is a valid character in names
 
-- list
-   - comparison is lexicographical
-      - first compares heads
-         - if first greater, returns True
-         - if equal, compares second element
+   - list
+      - comparison is lexicographical
+         - first compares heads
+            - if first greater, returns True
+            - if equal, compares second element
 
-- tuples
-   - can contain different type elements
-   - type of a tuple depends on length
+   - tuples
+      - empty tuple is called unit
+      - can contain different type elements
+      - type of a tuple depends on length
 
 - types
    - Int, Integer Char, Bool, Float, Double
@@ -44,6 +45,14 @@
    - lazy evaluation
       - thunk = promise to compute later when asking to
         produce result
+
+
+   - folds (foldl, foldr, foldl1, foldr1)
+      - foldr1 foldl1 don't take starting argument
+      - foldl' and foldl1' are stricter than foldr
+
+   - scan (scanl, scanr, scanl1, scanr1)
+      - scanl scanr like folds, but reports intermediary results in a list
 
 
 - typeclasses
@@ -98,14 +107,6 @@
          - fromIntegral :: (Num b, Integral a) => a -> b
          - ex: ghci> fromIntegral (length [1, 2, 3]) + 3.2
 
-   - folds (foldl, foldr, foldl1, foldr1)
-      - foldr1 foldl1 don't take starting argument
-      - foldl' and foldl1' are stricter than foldr
-
-   - scan (scanl, scanr, scanl1, scanr1)
-      - scanl scanr like folds, but reports intermediary results in a list
-
-
 
 - Modules
    - loosely coupled = components don't rely on each
@@ -132,7 +133,13 @@
       - Concurrency module
       - Complex Numbers module
 
+
    - STD module:
+      - prelude
+         - `id`
+            - takes parameter, returns same thing
+
+
       - Data.Char
          - Other functions
             - generalCategory
@@ -182,6 +189,7 @@
                - returns `True`
             - ex: simulate words
                - `filter (not . any isSpace) . groupBy ((==) `on` isSpace) $ "hey guys its me"`
+
       - Data.Map
          - association list (aka dictionary) for key-value pairs
          - Functions
@@ -333,219 +341,283 @@
             - compare lists based on length instead of lexicographically
                - ```sortBy (compare `on` length) [[], [1, 2, 5], [1, 2]]```
 
-      - Functions
-         - intersperse
-            - `intersperse :: a -> [a] -> [a]`
-            - `intersperse '.' "MONKEY"`
-               - returns "M.O.N.K.E.Y"
-         - intercalate
-            - `intercalate :: [a] -> [[a]] -> [a]`
-            - `intercalate " " ["hey", "there", "guys"]`
-               - returns "hey there guys"
-            - `intercalate [0, 0] [[1, 2], [3, 4]]`
-               - returns `[1, 2, 0, 0, 3, 4]`
-         - transpose
-            - in 2D matrix, turns columns into rows
-            - `transpose [[1, 2], [4, 5]]`
-               - returns `[[1, 4], [2, 5]]`
-         - concat
-            - flattens list of lists into 1 list
-               - `concat ["foo","bar","car"]`
-                  - returns "foobarcar"
-         - concatMap
-            - first maps a function to list, and
-              then concatenates with concat
-            - `concatMap (replicate 2) [1..3]`
-               - returns [1,1,2,2,3,3]
-         - and
-            - takes list and returns only if all
-              elements are True
-            - `and $ map (>4) [5, 6, 7, 8]`
-               - returns True
-         - or
-            - returns True if any element is True
-            - `or $ map (>4) [1,2,5]`
-               - returns True
-            - `or $ map (>4 [1, 2, 3]`
-               - returns False
-         - any and all
-            - take predicate and then check if
-              any/all elements satisfy the predicate
-            - `any (==4) [2, 3, 4]`
-               - returns True
-            - `all (>4) [5, 6, 7]`
-               - returns True
-         - iterate
-            - takes a function and starting value,
-              applies the function to starting
-              value, then applies function to
-              result
-            - `:t iterate`
-               - `iterate :: (a -> a) -> a -> [a]`
-            - `take 5 $ iterate (*2) 1`
-               - returns [1, 2, 4, 8, 16]
-         - splitAt
-            - takes index number and list, split at index,
-              returns tuple
-            - `:t splitAt`
-               - `splitAt :: Int -> [a] -> ([a], [a])`
-            - `splitAt 3 "heyman"`
-               - returns `("hey", "man")`
-         - takeWhile
-            - takes while predicate is true
-            - `:t takeWhile`
-               - `takeWhile :: (a->Bool) -> [a] -> [a]`
-            - `takeWhile (>3) [6,5,3,9]`
-               - returns `[6, 5]`
-            - `takeWhile (/=' ') "This is a test"
-               - returns "This"
-         - dropWhile
-            - same as takeWhile, but drop
-            - dropWhile (/=' ') "This is a sentence"
-               - returns " is a sentence"
-         - span
-            - similar to takeWhile, returns tuples of lists.
-            - First part is takeWhile, second is stuff
-              that would've gotten dropped
-            - `:t span`
-               - `span :: (a -> Bool) -> [a] -> ([a], [a])`
-            - `span (/=' ') "Hello world test"`
-               - returns `("Hello", " world test")`
-         - sort
-            - sort list, with elements which are
-              part of Ord typeclass
-            - `:t sort`
-               - `sort :: Ord a => [a] -> [a]`
-            - `sort "This will be sorted soon"`
-               - returns "     Tbdeehillnooorssstw"
-         - group
-            - takes list and groups adjacent elements
-              if they are equal
-            - `:t group`
-               - `group :: Eq a => [a] -> [[a]]`
-            - `group [1,1,1,2,2,3,3,2,2,5,6,7]`
-               - returns `[[1,1,1], [2,2], [3,3], [2, 2,], [5], [6], [7]]`
-         - inits & tails
-            - recursive apply init and tail
-            - `inits "w00t"`
-               - returns `["", "w", "w00", "w00t"]`
-            - `tails "w00t"`
-               - returns `["w00t", "00t", "0t", "t", ""]`
-            - `let w = "w00t" in zip (inits w) (tails W)`
-               - returns `[("", "w00t"), ("w", "00t"), ("w0", "0t"), ("w00", "t"), ("w00t", "")]`
-         - isInfixOf
-            - takes 2 lists and checks if first is
-              sublist of second
-            -  `:t isInfixOf`
-               - `isInfixOf :: Eq a => [a] -> [a] -> Bool`
-            - `isInfixOf "cat" "im a cat burglar"`
-               - returns : True
-         - isPrefixOf & isSuffixOf
-            - searches for sublist at beginning
-              and end of list
-            - `isPrefixOf "key" "key there"`
-               - returns: True
-            - `isSuffixOf "there!" "Hey there!"`
-               - returns: True
-         - elem/notElem
-            - checks if element is/isn't inside a list
-            - `elem 'a' ['A'..'Z']`
-               - returns: False
-         - partition
-            - takes a predicate and a list, returns
-              a pair of 2 lists based on whether an
-              element satisfies predicate
-            - `:t partition`
-               - `partition :: (a -> Bool) -> [a] -> ([a], [a])`
-            - partition ```haskell (`elem` ['A'..'Z'] "Hello World")```
-               - returns: `("HW", "ello orld")`
-         - find
-            - takes a list and a predicate, returns
-              first element that satisfies predicate
-            - `:t find`
-               - `find :: (a -> Bool) -> [a] -> Maybe a`
-            - `find (>3) [1, 3, 4, 8]`
-               - returns `Just 4`
-            - `find (>9) [1, 2, 4, 8`
-               - returns `Nothing`
-         - elemIndex
-            - similar to elem, but returns `Maybe Int`
-            - `:t elemIndex`
-               - `elemIndex :: (Eq a) => a -> [a] -> Maybe Int`
-            - `elemIndex 4 [1, 2, 3, 4, 5]`
-               - returns `Just 3`
-         - elemIndices
-            - same as elemIndices, but returns all
-              of them instead of just first
-            - failure is empty list
-         - findIndex/findIndices
-            - same as find, but with indices
-            - `:t findIndex`
-               - `findIndex :: (a -> Bool) -> [a] -> Maybe Int`
-            - `:t findIndices`
-               - `findIndices :: (a -> Bool) -> [a] -> [Int]`
-            - `findIndices (`elem` ['A'..'Z']) "Where Are Caps?"`
-               - returns `[0, 6, 10]`
-         - zip/zipWith
-            - `:t zip`
-               - `zip :: [a] -> [b] -> [(a, b)]`
-            - `:t zipWith`
-               - `zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]`
-            - zip/zipWith varients go up to 7
-               - zip, zip3, zip4, zip5, zip6, zip7
-               - zipWith, zipWith3, zipWith4, ...
-            - `zipWith3 (\x y z -> x+y+z) [1, 2] [4, 5] [2, 2]`
-               - returns `[7, 9]`
-         - lines
-            - returns every line of a string in a list
-         - unlines
-            - takes list of strings, returns 1 string with lines
-         - words
-            - splits word string into list of strings
-         - unwords
-            - takes list and returns 1 string with spaces
-         - nub
-            - takes list, weeds out duplicates
-         - delete
-            - takes element and list, and deletes
-              first occurance of element
-            - `delete 'h' "hey there"`
-               - returns: `"ey there"`
-         - `\\` (list difference)
-            - removes first occurance of every video
-            - similar to set difference
-            - `[1..10] \\ [2, 5, 9]`
-               - returns `[1, 3, 4, 6, 8, 10]`
-         - union
-            - appends stuff from second list into first
-            - duplicates get removed
-            - ```"hey man" `union` "what's up"`
-               - returns `"key manwt'sup"`
-         - intersect
-            - takes 2 lists and returns elements in common
-         - insert
-            - inserts element into list
-            - searches until finds element that's equal or
-              greater than item being inserted and inserts
-              just before that element
-            - if inserted in sorted list, result will stay sorted
-            - `:t insert`
-               - `insert :: (Ord a) => a -> [a] -> [a]`
-            - `insert 4 [3,5,1,2,8,2]`
-               - returns `[3,4,5,1,2,8,2]`
-            - `insert 4 [1,3,4,4,1]`
-               - returns `[1,3,4,4,4,1]`
+         - Functions
+            - intersperse
+               - `intersperse :: a -> [a] -> [a]`
+               - `intersperse '.' "MONKEY"`
+                  - returns "M.O.N.K.E.Y"
+            - intercalate
+               - `intercalate :: [a] -> [[a]] -> [a]`
+               - `intercalate " " ["hey", "there", "guys"]`
+                  - returns "hey there guys"
+               - `intercalate [0, 0] [[1, 2], [3, 4]]`
+                  - returns `[1, 2, 0, 0, 3, 4]`
+            - transpose
+               - in 2D matrix, turns columns into rows
+               - `transpose [[1, 2], [4, 5]]`
+                  - returns `[[1, 4], [2, 5]]`
+            - concat
+               - flattens list of lists into 1 list
+                  - `concat ["foo","bar","car"]`
+                     - returns "foobarcar"
+            - concatMap
+               - first maps a function to list, and
+                 then concatenates with concat
+               - `concatMap (replicate 2) [1..3]`
+                  - returns [1,1,2,2,3,3]
+            - and
+               - takes list and returns only if all
+                 elements are True
+               - `and $ map (>4) [5, 6, 7, 8]`
+                  - returns True
+            - or
+               - returns True if any element is True
+               - `or $ map (>4) [1,2,5]`
+                  - returns True
+               - `or $ map (>4 [1, 2, 3]`
+                  - returns False
+            - any and all
+               - take predicate and then check if
+                 any/all elements satisfy the predicate
+               - `any (==4) [2, 3, 4]`
+                  - returns True
+               - `all (>4) [5, 6, 7]`
+                  - returns True
+            - iterate
+               - takes a function and starting value,
+                 applies the function to starting
+                 value, then applies function to
+                 result
+               - `:t iterate`
+                  - `iterate :: (a -> a) -> a -> [a]`
+               - `take 5 $ iterate (*2) 1`
+                  - returns [1, 2, 4, 8, 16]
+            - splitAt
+               - takes index number and list, split at index,
+                 returns tuple
+               - `:t splitAt`
+                  - `splitAt :: Int -> [a] -> ([a], [a])`
+               - `splitAt 3 "heyman"`
+                  - returns `("hey", "man")`
+            - takeWhile
+               - takes while predicate is true
+               - `:t takeWhile`
+                  - `takeWhile :: (a->Bool) -> [a] -> [a]`
+               - `takeWhile (>3) [6,5,3,9]`
+                  - returns `[6, 5]`
+               - `takeWhile (/=' ') "This is a test"
+                  - returns "This"
+            - dropWhile
+               - same as takeWhile, but drop
+               - dropWhile (/=' ') "This is a sentence"
+                  - returns " is a sentence"
+            - span
+               - similar to takeWhile, returns tuples of lists.
+               - First part is takeWhile, second is stuff
+                 that would've gotten dropped
+               - `:t span`
+                  - `span :: (a -> Bool) -> [a] -> ([a], [a])`
+               - `span (/=' ') "Hello world test"`
+                  - returns `("Hello", " world test")`
+            - sort
+               - sort list, with elements which are
+                 part of Ord typeclass
+               - `:t sort`
+                  - `sort :: Ord a => [a] -> [a]`
+               - `sort "This will be sorted soon"`
+                  - returns "     Tbdeehillnooorssstw"
+            - group
+               - takes list and groups adjacent elements
+                 if they are equal
+               - `:t group`
+                  - `group :: Eq a => [a] -> [[a]]`
+               - `group [1,1,1,2,2,3,3,2,2,5,6,7]`
+                  - returns `[[1,1,1], [2,2], [3,3], [2, 2,], [5], [6], [7]]`
+            - inits & tails
+               - recursive apply init and tail
+               - `inits "w00t"`
+                  - returns `["", "w", "w00", "w00t"]`
+               - `tails "w00t"`
+                  - returns `["w00t", "00t", "0t", "t", ""]`
+               - `let w = "w00t" in zip (inits w) (tails W)`
+                  - returns `[("", "w00t"), ("w", "00t"), ("w0", "0t"), ("w00", "t"), ("w00t", "")]`
+            - isInfixOf
+               - takes 2 lists and checks if first is
+                 sublist of second
+               -  `:t isInfixOf`
+                  - `isInfixOf :: Eq a => [a] -> [a] -> Bool`
+               - `isInfixOf "cat" "im a cat burglar"`
+                  - returns : True
+            - isPrefixOf & isSuffixOf
+               - searches for sublist at beginning
+                 and end of list
+               - `isPrefixOf "key" "key there"`
+                  - returns: True
+               - `isSuffixOf "there!" "Hey there!"`
+                  - returns: True
+            - elem/notElem
+               - checks if element is/isn't inside a list
+               - `elem 'a' ['A'..'Z']`
+                  - returns: False
+            - partition
+               - takes a predicate and a list, returns
+                 a pair of 2 lists based on whether an
+                 element satisfies predicate
+               - `:t partition`
+                  - `partition :: (a -> Bool) -> [a] -> ([a], [a])`
+               - partition ```haskell (`elem` ['A'..'Z'] "Hello World")```
+                  - returns: `("HW", "ello orld")`
+            - find
+               - takes a list and a predicate, returns
+                 first element that satisfies predicate
+               - `:t find`
+                  - `find :: (a -> Bool) -> [a] -> Maybe a`
+               - `find (>3) [1, 3, 4, 8]`
+                  - returns `Just 4`
+               - `find (>9) [1, 2, 4, 8`
+                  - returns `Nothing`
+            - elemIndex
+               - similar to elem, but returns `Maybe Int`
+               - `:t elemIndex`
+                  - `elemIndex :: (Eq a) => a -> [a] -> Maybe Int`
+               - `elemIndex 4 [1, 2, 3, 4, 5]`
+                  - returns `Just 3`
+            - elemIndices
+               - same as elemIndices, but returns all
+                 of them instead of just first
+               - failure is empty list
+            - findIndex/findIndices
+               - same as find, but with indices
+               - `:t findIndex`
+                  - `findIndex :: (a -> Bool) -> [a] -> Maybe Int`
+               - `:t findIndices`
+                  - `findIndices :: (a -> Bool) -> [a] -> [Int]`
+               - `findIndices (`elem` ['A'..'Z']) "Where Are Caps?"`
+                  - returns `[0, 6, 10]`
+            - zip/zipWith
+               - `:t zip`
+                  - `zip :: [a] -> [b] -> [(a, b)]`
+               - `:t zipWith`
+                  - `zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]`
+               - zip/zipWith varients go up to 7
+                  - zip, zip3, zip4, zip5, zip6, zip7
+                  - zipWith, zipWith3, zipWith4, ...
+               - `zipWith3 (\x y z -> x+y+z) [1, 2] [4, 5] [2, 2]`
+                  - returns `[7, 9]`
+            - lines
+               - returns every line of a string in a list
+            - unlines
+               - takes list of strings, returns 1 string with lines
+            - words
+               - splits word string into list of strings
+            - unwords
+               - takes list and returns 1 string with spaces
+            - nub
+               - takes list, weeds out duplicates
+            - delete
+               - takes element and list, and deletes
+                 first occurance of element
+               - `delete 'h' "hey there"`
+                  - returns: `"ey there"`
+            - `\\` (list difference)
+               - removes first occurance of every video
+               - similar to set difference
+               - `[1..10] \\ [2, 5, 9]`
+                  - returns `[1, 3, 4, 6, 8, 10]`
+            - union
+               - appends stuff from second list into first
+               - duplicates get removed
+               - ```"hey man" `union` "what's up"`
+                  - returns `"key manwt'sup"`
+            - intersect
+               - takes 2 lists and returns elements in common
+            - insert
+               - inserts element into list
+               - searches until finds element that's equal or
+                 greater than item being inserted and inserts
+                 just before that element
+               - if inserted in sorted list, result will stay sorted
+               - `:t insert`
+                  - `insert :: (Ord a) => a -> [a] -> [a]`
+               - `insert 4 [3,5,1,2,8,2]`
+                  - returns `[3,4,5,1,2,8,2]`
+               - `insert 4 [1,3,4,4,1]`
+                  - returns `[1,3,4,4,4,1]`
+
+
+
+      - Control.Monad
+         - functions
+            - when
+               - takes a boolean and I/O action and
+                 if Bool is True, returns I/O action
+               - if False, returns ()
+               - same as: if x then do I/O else return ()
+            - forever
+               - takes I/O action & returns I/O
+                 action that repeats it forever
+            - forM
+               - similar to mapM, but reversed
+                 parameter order
+               - make I/O action for every list element
+
+      - System.Directory
+         - openTempFile
+            - takes directory path, and template name of file
+            - returns tuple with actual file name, and file handle
+            - `:t openTempFile :: FilePath -> String -> IO (FilePath, Handle)`
+
+      - System.IO
+
+         - types
+            - FilePath
+               - `type FilePath = String`
+            - IOMode
+               - `data IOMode = ReadMode | WriteMode | AppendMode | ReadWriteMode`
+
+         - functions
+            - withFile
+               - `:t withFile :: FilePath -> IOMode -> (Handle -> IO a) -> IO a`
+               - ```withFile "test.txt" ReadMode (\handle -> do
+                       contents <- hGetContents handle
+                       putStr contents)```
+            - openFile
+               - `handle <- openFile "fname.txt" ReadMode`
+               - `:t openFile :: FilePath -> IOMode -> IO Handle`
+            - hClose
+               - `hClose handle`
+            - hGetContents
+               - `contents <- hGetContents handle`
+            - hGetLine/hPutStr/hPutStrLn/hGetChar
+            - readFile
+               - read file and return IO String
+               - `:t readFile :: FilePath -> IO String`
+            - writeFile
+               - takes path and string, writes to file
+               - if file already exists, overwrites
+               - `:t writeFile :: FilePath -> String -> IO ()`
+            - appendFile
+               - same as writeFile, but append mode
+            - hSetBuffering
+               - takes handle and BufferMode, and returns I/O to set BufferMode
+               - `:t hSetBuffering -> Handle -> BufferMode -> IO ()`
+            - hFlush
+               - takes handle and flushes buffer
 
 
 
 
-- Typeclasses
-   - defines some behavior and types that can behave in that way are made instances
-   - multiple typclasses in signature
-      - `f :: (Num a, Eq a) => a -> a`
+- Typeclasses 2
+   - notes
+      - defines some behavior and types that can behave in
+        that way are made instances
+      - multiple typclass constraints in signature
+         - `f :: (Num a, Eq a) => a -> a`
 
    - vocab
       - concrete type = fully applied type without parameters
+      - type constructor
+         -takes argument to make concrete type
 
    - possible things to derive in ADT
       - Eq, Ord, Show, Read
@@ -567,6 +639,8 @@
       - Read
          - `read "Person {firstName =\"Michael\",lastName =\"Diamond\", age = 43}" :: Person`
             - returns Person as an Object
+
+
    - ADT
       - `data Maybe a = Nothing | Just a`
       - `:k`
@@ -577,6 +651,115 @@
             - `Int :: *`
          - `:k Num`
             - `Num :: * -> GHC.Prim.Constraint`
+
+   - Making typeclasses
+      - doesn't need implement function bodies, but
+      need to make define their type signatures
+
+
+
+- IO
+   - compiling single file
+      - `ghc --make filenoextname`
+      - don't add .hs
+
+   - misc notes
+      - any I/O code is tained
+         - so are computation depending on tained I/O
+      - IO typeclass
+         - tainted
+      - main
+         - IO action performed when in main
+
+      - do
+         - glues several IO actions into one
+         - last action cannot be bound to a name
+         - last action is returned from do
+
+
+      - `<-`
+         - store variable
+         - extracts value from IO box
+         - temporary untaints the code
+         - `name <- getLine`
+            - perform I/O computation and
+              bind result to name
+
+
+   - misc I/O functions
+
+      - return
+         - makes IO action out of pure value
+         - `:t return`
+            - `return :: Monad m => a -> m a`
+         - `let x = return 5`
+            - `:t x`
+               - `x :: (Monad m, Num a) => m a
+
+      - getLine
+         - `:t getLine`
+            - `getLine :: IO String`
+
+      - putStrLn
+         - takes a string and returns I/O action
+           that has a result type ()
+         - i.e. prints line to screen
+         - `:t putStrLn`
+            - `putStrLn :: String -> IO ()`
+         - `:t putStrLn "Hello"`
+            - `putStrLn "Hello" :: IO ()`
+
+      - putStr
+         - like putStrLn without new line
+
+      - putChar
+         - print out 1 character
+
+      - print
+         - takes value of any type that's instance
+           of show, and prints it
+         - `print = putStrLn . show`
+
+      - getChar
+         - `:t getChar`
+            - `getChar :: IO Char`
+         - due to buffering, doesn't start reading
+           until user enters return
+
+      - sequence
+         - takes list of IO actions in sequence
+         - result is a list of all IO results
+         - `sequence $ map print [1,2,3]`
+            - prints values, returns `[(), (), ()]`
+         - fake `:t sequence`
+            - `sequence :: [IO a] -> IO [a]`
+         - real `:t sequence`
+            - `sequence :: (Monad m, Traversable t) => t (m a) -> m (t a)`
+
+      - mapM
+         - takes a function and list, maps
+           function, and then sequences it
+         - `mapM print [1,2,3]`
+            - prints values, returns `[(),(),()]`
+
+      - mapM_
+         - same as mapM, throws away return value
+
+
+   - stream functions
+      - getContents
+         - reads from stdin until EOF
+         - `:t getContents :: IO String`
+         - lazy, used in piping
+            - don't have to call multiple times
+              for each line, reads line by line
+      - interact
+         - `:t interact :: (String -> String) -> IO ()`
+         - takes a string manipulation function,
+           and returns I/O that takes input and
+           runs function on input
+
+
 
 
 - TODO:
