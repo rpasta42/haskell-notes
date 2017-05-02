@@ -307,20 +307,19 @@ handler1 e = putStrLn "Whoops, had some trouble"
 
 handler2 :: IOError -> IO ()
 handler2 e
-      | isDoesNotExistError e = (do
+      | isDoesNotExistError e = do
          putStrLn "The file doesn't exist!"
          (case ioeGetFileName e of
-            Just path -> putStrLn $ "file name " ++ path
-            Nothing -> putStrLn "Nothing"))
+            Just path -> putStrLn $ "file name: " ++ path
+            Nothing -> putStrLn "Nothing")
       | isFullError e = putStrLn "full error"
       | isIllegalOperation e = putStrLn "illegal"
       | otherwise = ioError e
 
 
---kk
 
 
-main = main_ex22
+main = main_ex25
 
 
 
