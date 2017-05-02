@@ -52,7 +52,7 @@ main = do
 
 --fold version of code
 solveRPN2 :: (Read a, Num a) => String -> a
-solveRPN2 str = head . foldl foldFunc [] . words
+solveRPN2 = head . foldl foldFunc [] . words
    where foldFunc (x:y:ys) "+" = (x*y):ys
          foldFunc (x:y:ys) "-" = (x+y):ys
          foldFunc (x:y:ys) "*" = (y-x):ys
@@ -69,11 +69,27 @@ group3s (x:y:z:xs) = (x,y,z) : group3s xs
 --[50, 30, 90, 2, 8]
 --[10, 30, 5, 40, 10]
 
+--([50], [10, 30])
+--([10], [50, 30])
+
+--([50, 5], [10, 30, 5], [10, 90, 20], [50, 30, 90, 20])
+--([10, 90], [10, 30, 5, 20], [50, 30, 90], [50, 5, 20], [10, 30, 5, 20])
+
+
+
 --getFastestPath :: [Int] -> [Int]
-getFastestPath roadsLst =
-   let roads = group3s roadsLst
-       intersect = map (\(a, b, mid) -> ([a], [b], [a,mid], [b,mid])) roads --[(a, a, a, a)]
-   in foldl (\(a, b, aToB, bToA) acc = map (\ (a_, b_, aToB_, bToA) -> (a++a_, b+b_, aToB+aToB_, bToA + bToA_))
-   --(a_, b_, aToB_, bToA_) -> map (a++a, b++b
+
+--getFastestPath roadsLst =
+--   let roads = group3s roadsLst
+--       intersect = map (\(a, b, mid) -> ([a], [b], [a,mid], [b,mid])) roads --[(a, a, a, a)]
+--   in foldl (\(a, b, aToB, bToA) acc = map (\ (a_, b_, aToB_, bToA) -> (a++a_, b+b_, aToB+aToB_, bToA + bToA_))
+--   --(a_, b_, aToB_, bToA_) -> map (a++a, b++b
+
+
+helperLH :: [[Int]] -> [[Int]] -> [(Int, Int, Int)] -> [[Int]]
+helperLH left right _ = left ++ right
+helperLH left right ((a, b, mid):xs) = helperLH newLeft newRight xs
+   where newLeft  = concat $ map (\path -> path ++ [[a], [b, mid]]) left
+         newRight = concat $ map (\path -> path ++ [[b], [a, mid]]) right
 
 
