@@ -7,6 +7,12 @@
 import Data.Char
 import Control.Monad
 import System.IO
+import System.IO.Error
+import Control.Exception
+import System.Environment
+import System.Random
+import System.Environment
+import qualified Data.ByteString.Lazy as B
 
 ---- #### IO
 
@@ -212,6 +218,7 @@ main_ex18 = do
    contents <- readFile "io.hs"
    putStr contents
 
+
 --ex 19 (hSetBuffering):
 main_ex19 = do
    withFile "io.hs" ReadMode (\handle -> do
@@ -221,10 +228,99 @@ main_ex19 = do
 
 
 
----
+-- ## cmd args
+
+--ex 20 (cmd args):
+main_ex20 = do
+   args <- getArgs
+   progName <- getProgName
+   mapM putStrLn args
+   putStrLn progName
+   x <- getLine
+   putStrLn x
+
+-- ## random
+
+--ex 21 (random coins):
+threeCoins :: StdGen -> (Bool, Bool, Bool)
+threeCoins gen =
+   let (coin1, newGen) = random gen
+       (coin2, newGen') = random newGen
+       (coin3, _) = random newGen'
+   in (coin1, coin2, coin3)
+
+countTrueCoins :: [Int] -> (Int, Int, Int)
+--countTrue stdRange
+countTrueCoins xs =
+   let allCoins = map (\i -> threeCoins $ mkStdGen i) xs
+       trueTo1 True = 1
+       trueTo1 False = 0
+   in foldr (\(c1, c2, c3) (acc1, acc2, acc3) -> (acc1+trueTo1 c1, acc2+trueTo1 c2, acc3+trueTo1 c3))
+            ((0, 0, 0) :: (Int, Int, Int))
+            allCoins
 
 
-main = main_ex19
+main_ex21 = do let coins = threeCoins (mkStdGen 100)
+               print coins
+               return 0
+
+
+--ex 22 (getStdGen with I/O):
+
+main_ex22 = do
+   randGen <- getStdGen
+   putStr $ take 20 (randomRs ('a','z') randGen)
+
+
+
+-- ## bytestrings
+
+--ex 23 (copying files with bytestrings):
+
+main_ex23 = do
+   (fileName1:fileName2:_) <- getArgs
+   copyFile fileName1 fileName2
+
+copyFile :: FilePath -> FilePath -> IO ()
+copyFile source dest = do
+   contents <- B.readFile source
+   B.writeFile dest contents
+
+--usage runhaskell io.hs something.txt ../../something.txt
+
+
+
+-- ## Exceptions
+
+--ex 24/25 (IO exception handling)
+
+main_ex24 = toTry `catch` handler1
+main_ex25 = toTry `catch` handler2
+
+toTry :: IO ()
+toTry = do (fileName:_) <- getArgs
+           contents <- readFile fileName
+           putStrLn $ "The file has " ++ show (length $ lines contents) ++ " lines!"
+
+handler1 :: IOError -> IO ()
+handler1 e = putStrLn "Whoops, had some trouble"
+
+handler2 :: IOError -> IO ()
+handler2 e
+      | isDoesNotExistError e = (do
+         putStrLn "The file doesn't exist!"
+         (case ioeGetFileName e of
+            Just path -> putStrLn $ "file name " ++ path
+            Nothing -> putStrLn "Nothing"))
+      | isFullError e = putStrLn "full error"
+      | isIllegalOperation e = putStrLn "illegal"
+      | otherwise = ioError e
+
+
+--kk
+
+
+main = main_ex22
 
 
 

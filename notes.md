@@ -1,15 +1,22 @@
 
-- lazy
+- misc
+   - lazy
+   - statically typed
+      - type inference
+   - cabal
+      - `apt install cabal-install`
+      - `cabal update`
+         - update package list
+      - ex
+         - `cabal install random`
 
-- statically typed
-   - type inference
+   - ghci
+      - needs lets for functions and variables
+      - to load a file
+         - write file.hs
+         - load with :l file
+         - to reload, either :l file again, or just :r
 
-- ghci
-   - needs lets for functions and variables
-   - to load a file
-      - write file.hs
-      - load with :l file
-      - to reload, either :l file again, or just :r
 
 - misc
    - ' is a valid character in names
@@ -134,10 +141,97 @@
       - Complex Numbers module
 
 
+   - non STD modules
+
+      - System.Random
+         - installation
+            - `cabal install random`
+         - typeclasses
+            - RandomGen
+         - types
+            - StdGen
+            - Random
+
+         - functions
+            - mkStdGen
+               - `mkStdGen :: Int -> StdGen`
+            - random
+               - `random :: (RandomGen g, Random a) => g (a, g)`
+               - `random $ mkStdGen 100`
+                  - `(-3633736515773289454,693699796 2103410263)`
+                     - first value is random number, second is new RandomGen
+            - randoms
+               - infinite list of randoms
+            - randomR
+               - `randomR :: (RandomGen g, Random a) -> (a, a) -> g -> (a, g)`
+               - random in range
+            - randomRs
+               - stream of randoms in a range
+               - `randomRs :: (RandomGen g, Random a) => (a, a) -> g -> [a]`
+               - ex: `take 10 $ randomRs ('a','z') (mkStdGen 3)`
+            - getStdGen
+               - `getStdGen :: IO StdGen`
+               - non-pure so random numbers won't be the same each time
+               - calling twice, will get the same generator twice
+            - newStdGen
+               - `newStdGen :: IO StdGen`
+               - new random number generator
+               - if call getStdGen somewhere, it'll be the new generator
+
+
+
    - STD module:
       - prelude
          - `id`
             - takes parameter, returns same thing
+
+      - `Data.ByteString`
+         - notes
+            - `Data.ByteString`
+               - default one is strict
+               - no promises, no infinite bytestrings
+               - fills up memory faster
+            - `Data.ByteString.Lazy`
+               - lazy version
+               - has thunks (promise)
+               - stored in chunks
+                  - in a list, each element is a thunk
+                  - each chunk is 64K
+                  - fits in CPU L2 cache
+            - each element is 1 byte in size
+         - functions
+            - imports
+               - `import qualified Data.ByteString.Lazy as B`
+               - `import qualified Data.ByteString as S`
+               - `import GHC.Word`
+                  - like `Int`, but 0-255 range
+                  - in `Num typeclass`
+            - pack
+               - `B.pack`
+                  - `pack :: [Word8] -> Data.ByteString.Lazy.ByteString`
+               - `S.pack`
+                  - `pack :: S.pack :: [Word8] -> Data.ByteString.ByteString`
+               - ex: `B.pack [88..100]`
+            - unpack
+               - takes a bytestring and turns it into a list of bytes
+            - fromChunks
+               - takes a list of strict bytestring and converts them into lazy bytestrings
+               - good if have a lot of small strict bytestrings and want to process
+                 them efficiently without joing them into one big strict bytestring
+               -ex: `B.fromChunks [S.pack [40,41,42], S.pack [43,44,45], S.pack [46,47,48]]`
+            - cons
+               - same as `:` for lists
+               - B.cons: makes a new chunk even if the first chunk in bytestring isn't full
+            - `cons'`
+               - strict, good if inserting a lot of bytes
+            - empty
+               - makes empty bytestring
+            - head/tail/init/null/length/map/reverse/foldl/foldr/concat/takeWhile/filter
+               - same functions as lists
+            - functions from System.IO except ByteString instead of string
+               - readFile
+                  - `:t readFile :: FilePath -> IO ByteString`
+
 
 
       - Data.Char
@@ -342,6 +436,8 @@
                - ```sortBy (compare `on` length) [[], [1, 2, 5], [1, 2]]```
 
          - Functions
+            - lookup
+               - `lookup :: Eq a => [(a, b)] -> Maybe b`
             - intersperse
                - `intersperse :: a -> [a] -> [a]`
                - `intersperse '.' "MONKEY"`
@@ -553,6 +649,7 @@
                  if Bool is True, returns I/O action
                - if False, returns ()
                - same as: if x then do I/O else return ()
+               - ex: `when Bool do blah <- test`
             - forever
                - takes I/O action & returns I/O
                  action that repeats it forever
@@ -565,7 +662,62 @@
          - openTempFile
             - takes directory path, and template name of file
             - returns tuple with actual file name, and file handle
+            - actual file name = template name + some characters
             - `:t openTempFile :: FilePath -> String -> IO (FilePath, Handle)`
+            - `openTempFile "." "temp"`
+         - doesFileExist
+            - `:t doesFileExist :: FilePath -> IO Bool`
+         - removeFile
+            - `:t removeFile :: FilePath -> IO ()`
+         - renameFile
+            - `:t renameFile :: FilePath -> IO ()`
+         - getCurrentDirectory
+            - `:t getCurrentDirectory :: IO FilePath`
+         - copyFile
+            - TODO
+
+      - System.Environment
+         - getArgs
+            - `:t getArgs :: IO [String]`
+            - cmd arguments
+            - double quotes for multi-word arg as 1 arg:
+               - ex: `"fdsf sdfsd fds"`
+         - getProgName
+            - `:t getProgName :: IO String`
+            - executable name
+
+      - `Control.Exception` (old name `System.IO.Error`)
+         - catch
+            - old type signature
+               - `catch :: IO a -> (IOError -> IO a) -> IO a`
+            - new type signature
+               - `catch :: Exception e => IO a -> (e -> IO a) -> IO a`
+
+            - takes IO action that can fail
+            - second is handler that takes exception
+
+
+      - `System.IO.Error`
+         - functions
+            - `ioError :: IOException -> IO a`
+               - takes I/O error and produces I/O action that will throw the error
+               - can act as IO anything because it doesn't yield a result
+            - `userError`
+               - makes an exception; caught with isUserError
+               - ex: `ioError $ userError "test"`
+            - `isDoesNotExistError :: IOError -> Bool`
+               - predicate that takes `IOError` and returns true if file doesn't exist
+            - `isAlreadyExistsError`
+            - `isAlreadyInUseError`
+            - `isFullError`
+            - `isEOFError`
+            - `isIllegalOperation`
+            - `isPermissionError`
+            - `isUserError`
+               - checks if exception was made by `userError` function
+            - `ioeGetFileName :: IOError -> Maybe FilePath`
+               - if exception has filepath, extract it
+
 
       - System.IO
 
@@ -589,6 +741,7 @@
             - hGetContents
                - `contents <- hGetContents handle`
             - hGetLine/hPutStr/hPutStrLn/hGetChar
+               - file equivalent of std in/out
             - readFile
                - read file and return IO String
                - `:t readFile :: FilePath -> IO String`
@@ -761,6 +914,18 @@
 
 
 
+
+
+- Exceptions
+   -modules
+      - `Control.Exception` for `catch`
+      - `System.IO.Error` for I/O errors
+      - `https://downloads.haskell.org/~ghc/6.10.1/docs/html/libraries/base/System-IO-Error.html#3`
+   - pure code can throw exceptions
+      - can only be caught in the I/O part of our code
+      - bad practice to mix pure code and exceptions
+         - use type system (Either/Maybe)
+   - re-thrown uncaught exceptions
 
 - TODO:
    - implement foldl1 foldr1, scans, etc

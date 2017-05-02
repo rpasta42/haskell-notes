@@ -1,5 +1,9 @@
-import Data.List (tails, elemIndex, inits)
+import Data.List (tails, elemIndex, inits, delete)
 import qualified Data.Map as DMap
+import System.Directory
+import System.IO
+import System.Environment
+
 
 --putStr or putStrLn
 v1 = "test \n foo"
@@ -15,7 +19,6 @@ split str = map (\x -> reverse x) (split' "" str) --split' currLine rest
 
 
 --splitStr
-
 
 
 
@@ -215,6 +218,7 @@ instance Main.Functor (DMap.Map a) where
 --Main.fmap (++"test") (DMap.fromList [("test", "yo"), ("ho", "no")])
 --returns: fromList [("ho","notest"),("test","yotest")]
 
+
 --type-foo
 class Tofu t where
    tofu :: j a -> t a j
@@ -223,6 +227,101 @@ data Frank a b = Frank {frankField :: b a} deriving (Show)
 
 instance Tofu Frank where
    tofu x = Frank x
+
+
+
+---- #### I/O
+
+--ex1 (TODO program):
+
+--import System.IO
+--import System.Directory
+--import Data.List
+
+main_ex1 = do
+    handle <- openFile "todo.txt" ReadMode
+    (tempName, tempHandle) <- openTempFile "." "temp"
+    contents <- hGetContents handle
+    let todoTasks = lines contents
+        numberedTasks = zipWith (\n line -> show n ++ " - " ++ line) [0..] todoTasks
+    putStrLn "These are your TO-DO items:"
+    putStr $ unlines numberedTasks
+    putStrLn "Which one do you want to delete?"
+    numberString <- getLine
+    let number = read numberString
+        newTodoItems = delete (todoTasks !! number) todoTasks
+    hPutStr tempHandle $ unlines newTodoItems
+    hClose handle
+    hClose tempHandle
+    removeFile "todo.txt"
+    renameFile tempName "todo.txt"
+
+
+---- ## cmd args
+
+--ex2 cmd args todo app:
+
+--runhaskell test.hs add todo.txt "Learn Analytics"
+--runhaskell test.hs add todo.txt "Blah"
+--runhaskell test.hs view todo.txt
+--runhaskell test.hs remove todo.txt 0
+   -- removes "Learn Analytics"
+
+
+--import System.Environment
+--import System.Directory
+--import System.IO
+--import Data.List
+
+dispatch :: [(String, [String] -> IO ())]
+dispatch = [ ("add", add)
+           , ("view", view)
+           , ("remove", remove)
+           ]
+
+main_ex2 = do
+   (command:args) <- getArgs
+   let (Just action) = lookup command dispatch
+   action args
+
+add :: [String] -> IO ()
+add [fileName, todoItem] = appendFile fileName (todoItem ++ "\n")
+
+
+view :: [String] -> IO ()
+view [fileName] = do
+   contents <- readFile fileName
+   let todoTasks = lines contents
+       numberedTasks = zipWith (\n line -> show n ++ " - " ++ line) [0..] todoTasks
+   putStr $ unlines numberedTasks
+
+
+remove :: [String] -> IO ()
+remove [fileName, numberString] = do
+   handle <- openFile fileName ReadMode
+   (tempName, tempHandle) <- openTempFile "." "temp"
+   contents <- hGetContents handle
+   let number = read numberString
+       todoTasks = lines contents
+       newTodoItems = delete (todoTasks !! number) todoTasks
+   hPutStr tempHandle $ unlines newTodoItems
+   hClose handle
+   hClose tempHandle
+   removeFile fileName
+   renameFile tempName fileName
+
+
+
+
+---- ## randomness
+
+--nope
+
+
+---- ## exceptions
+
+--nope
+
 
 
 ---- #### 500 datastructures
@@ -291,5 +390,7 @@ subs0Sum xs = filter (not . null) $ search' (\x -> sum x == 0) xs
 
 
 
+
+main = main_ex2
 
 
