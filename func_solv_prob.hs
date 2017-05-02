@@ -78,18 +78,28 @@ group3s (x:y:z:xs) = (x,y,z) : group3s xs
 
 
 --getFastestPath :: [Int] -> [Int]
-
---getFastestPath roadsLst =
---   let roads = group3s roadsLst
+getFastestPath roadsLst =
+   let roads = group3s roadsLst
+   in helperLH [] [] roads
 --       intersect = map (\(a, b, mid) -> ([a], [b], [a,mid], [b,mid])) roads --[(a, a, a, a)]
 --   in foldl (\(a, b, aToB, bToA) acc = map (\ (a_, b_, aToB_, bToA) -> (a++a_, b+b_, aToB+aToB_, bToA + bToA_))
 --   --(a_, b_, aToB_, bToA_) -> map (a++a, b++b
 
 
 helperLH :: [[Int]] -> [[Int]] -> [(Int, Int, Int)] -> [[Int]]
-helperLH left right _ = left ++ right
+helperLH left right [] = left ++ right
 helperLH left right ((a, b, mid):xs) = helperLH newLeft newRight xs
-   where newLeft  = concat $ map (\path -> path ++ [[a], [b, mid]]) left
-         newRight = concat $ map (\path -> path ++ [[b], [a, mid]]) right
+   --where newLeft  = concat $ map (\path -> [path ++ [a], path ++ [b, mid]]) left
+   --      newRight = concat $ map (\path -> [path ++ [b], path ++ [a, mid]]) right
 
+   --where newLeft  = concat $ map (\path -> path ++ left) [[a], [b, mid]]
+   --      newRight = concat $ map (\path -> path ++ right) [[b], [a, mid]]
+   where newLeft = concat $ [[a] ++ left, [b, mid] ++ left]
+         newRight = concat $ [[b] ++ right, [a, mid] ++ right]
+
+
+
+lhData = [50, 10, 30, 5, 90, 20] -- , 40, 2, 25, 10, 8, 0]
+
+paths = getFastestPath lhData
 
