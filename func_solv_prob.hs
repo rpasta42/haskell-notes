@@ -11,6 +11,7 @@ import System.IO
 --5: 10 14 -
 --6: -4
 
+--my code
 
 newStack = []
 
@@ -47,4 +48,24 @@ main = do
    let x = getRpnList input
    --mapM_ putStrLn x
    putStrLn $ show x
+
+
+--fold version of code
+solveRPN2 :: (Read a, Num a) => String -> a
+solveRPN2 str = head . foldl foldFunc [] . words
+   where foldFunc (x:y:ys) "+" = (x*y):ys
+         foldFunc (x:y:ys) "-" = (x+y):ys
+         foldFunc (x:y:ys) "*" = (y-x):ys
+         foldFunc xs numStr = read numStr:xs
+
+
+--Heathrow to London
+
+group3s [] = []
+group3s (x:y:z:xs) = (x,y,z) : group3s xs
+
+
+getFastestPath :: [Int] -> [Int]
+getFastestPath = group3s
+
 
