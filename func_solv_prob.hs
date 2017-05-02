@@ -82,22 +82,19 @@ getFastestPath roadsLst =
    let roads = group3s roadsLst
        allRoutes = helperLH [[0]] [[0]] roads
    in (foldl (\x acc -> if sum x < sum acc then x else acc) [100000] allRoutes, allRoutes)
---       intersect = map (\(a, b, mid) -> ([a], [b], [a,mid], [b,mid])) roads --[(a, a, a, a)]
---   in foldl (\(a, b, aToB, bToA) acc = map (\ (a_, b_, aToB_, bToA) -> (a++a_, b+b_, aToB+aToB_, bToA + bToA_))
---   --(a_, b_, aToB_, bToA_) -> map (a++a, b++b
 
 
 helperLH :: [[Int]] -> [[Int]] -> [(Int, Int, Int)] -> [[Int]]
-helperLH left right [] = left ++ right --(map tail left) ++ (map tail right)
+helperLH left right [] = (map tail left) ++ (map tail right)
 helperLH left right ((a, b, mid):xs) = helperLH newLeft newRight xs
-   where newLeft  = concat $ map (\path -> [path ++ [a], path ++ [b, mid]]) left
-         newRight = concat $ map (\path -> [path ++ [b], path ++ [a, mid]]) right
-
+   where zipped = zip left right
+         newLeft  = concat $ map (\(l, r) -> [l ++ [a], r ++ [b, mid]]) zipped
+         newRight = concat $ map (\(l, r) -> [r ++ [b], l ++ [a, mid]]) zipped
 
 lhData1 = [50, 10, 30, 5, 90, 20]
 lhData2 = [50, 10, 30, 5, 90, 20 , 40, 2, 25, 10, 8, 0]
 
 
-paths = getFastestPath lhData2
+(fastestPath, allPaths) = getFastestPath lhData2
 
 
