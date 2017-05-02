@@ -65,7 +65,15 @@ group3s [] = []
 group3s (x:y:z:xs) = (x,y,z) : group3s xs
 
 
-getFastestPath :: [Int] -> [Int]
-getFastestPath = group3s
+--[10, 90, 2, 8]
+--[50, 30, 90, 2, 8]
+--[10, 30, 5, 40, 10]
+
+--getFastestPath :: [Int] -> [Int]
+getFastestPath roadsLst =
+   let roads = group3s roadsLst
+       intersect = map (\(a, b, mid) -> ([a], [b], [a,mid], [b,mid])) roads --[(a, a, a, a)]
+   in foldl (\(a, b, aToB, bToA) acc = map (\ (a_, b_, aToB_, bToA) -> (a++a_, b+b_, aToB+aToB_, bToA + bToA_))
+   --(a_, b_, aToB_, bToA_) -> map (a++a, b++b
 
 
