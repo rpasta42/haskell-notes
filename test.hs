@@ -3,6 +3,7 @@ import qualified Data.Map as DMap
 import System.Directory
 import System.IO
 import System.Environment
+import Control.Applicative
 
 
 --putStr or putStrLn
@@ -321,6 +322,11 @@ remove [fileName, numberString] = do
 ---- ## exceptions
 
 --nope
+
+
+
+
+---- #### Applicatives/Monoids
 
 
 

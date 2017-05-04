@@ -927,6 +927,260 @@
          - use type system (Either/Maybe)
    - re-thrown uncaught exceptions
 
+
+- Applicative Functors/Monoids
+   - fmap
+      - `fmap :: Functor f => (a -> b) -> f a -> f b`
+   - a functor is like a box
+      - proper term computational context
+   - to make type constructor instance of Functor, it needs kind `* -> *`
+      - i.e. take 1 concrete type as type parameter
+      - ex: `instance Functor Maybe where`
+      - if takes 2 type parameters, we need to partially apply it
+         - ex:
+            - `instance Functor (Either a) where`
+            - `fmap :: (b -> c) -> Either a b -> Either a c`
+
+   - `IO`
+      - `:t fmap`
+         - `fmap :: (a -> b) -> IO a -> IO b`
+      - if binding I/O result to name, only to call function, then use fmap instead
+      - `IO String`
+         - IO action, when performed gets a String
+
+   - `(->) r a`
+      - `:m + Control.Monad.Instances` to use
+      - `:k (->)`
+         - `(->) :: * -> * -> *`
+      - `->` is just a type constructor that takes 2 parameters
+         - `(->) r a`
+      - partially apply to make functor: `(->) r`
+      - implementation in `Control.Monad.Instances`
+      - fmap
+         - `fmap :: (a -> b) -> ((->) r a) -> ((->) r b)`
+         - `fmap :: (a -> b) -> (r -> a) -> (r -> b)`
+
+   - lifting
+      - makes a function operate on functors
+      - `let f = fmap (*3)`
+         - `fmap (*3) :: (Num a, Functor f) => f a -> f a`
+         - `f (Just 3)` returns `Just 9`
+         - `f [100..102]` returns `[300, 303, 306]`
+      - `let z = fmap (replicate 3)`
+         - `z Just 3` returns `[Just 3, Just 3, Just 3]`
+         - `z [1..3]` returns `[[1,1,1],[2,2,2],[3,3,3]]`
+         - `z $ Right "blah"` returns `Right ["black", "blah", "blah"]`
+         - `z $ Left "hi"` returns `Left "hi"`
+      - currying
+         - function that takes `a` and returns `b -> c`
+            - `a -> b -> c`
+            - `a -> (b -> c)`
+      - normal sig: `fmap :: ((a -> b) -> f a) -> f b`
+         - function that takes 1 function and functor, and returns functor
+      - lifting sig: `fmap :: (a -> b) -> (f a -> f b)`
+         - function that takes functor and returns a new function that's
+           like old one, but it takes a functor as parameter and returns functor
+
+   - functor laws
+      - 1st: if map id over functor, the functor should be same as original functor
+         - fmap id over a functor, it should besame as calling id on functor
+         - i.e. `fmap id' == `id`
+         - `fmap id (Just 3)` == `id $ Just 3` returns `Just 3`
+         - `fmap id [1..5]` == `id [1..5]`
+
+
+      - 2nd: composing 2 functions and then mapping result function over a functor should be the same
+        as first mapping one function over the functor and then mapping the other one
+         - `fmap (f . g)` == `fmap f . fmap g`
+         - for any functor F, following holds
+            - `fmap (f . g) F` == `fmap f (fmap g F)`
+
+
+
+   - Applicative functors
+      - `Control.Applicative` module
+
+      - Applicative Laws
+         - `pure id <*> v` = `v`
+         - `pure (.) <*> u <*> v <*> w` = `u <*> (v <*> w)`
+         - `pure f <*> pure x` = `pure (f x)`
+         - `u <*> pure y` = `pure ($ y) <*> u`
+
+      - by mapping multi-parameter functions over functor, we get a functors that contain functions
+         - ex1: `fmap (*) (Just 3)`
+            - returns `Just ((*) 3)`
+         - ex2 usage:
+            - `let a = fmap (*) [1,2,3,4]`
+               - `:t a :: [Integer -> Integer]`
+            - `fmap (\f -> f 9) a`
+               - returns `[9, 8, 27, 36]`
+
+
+      - applicative usage (why)
+         - normal fmap maps a function over functor
+         - we want to map a function inside functor over functor
+            - ex1: 2 functors `Just (3 *)` and `Just 5`
+               - returns: `Just $ 3*15`
+         - takes parameters that aren't necessarily wrapped in functor, and operates on values in functor contexts
+            - alternative to `pure f <*> x <*> y <*> ...`
+
+
+      - Applicative typeclass functions
+         - `pure : a -> f a`
+         - `(<*>) :: f (a -> b) -> f a -> f b`
+         - `(<$>)`
+            - fmap as infix operator
+            - `(<$>) :: (Functor f) => (a -> b) -> f a -> f b`
+            - `f <$> x = fmap f x`
+
+
+      - Functors & Applicatives and `<$>`
+         - `<$>` is fmap as infix operator
+         - `f <*> x` = `fmap f x`
+         - `pure f <*> x` = `fmap f x`
+            - pure puts values in default context
+         - `f <$> x <*> y <*> z` to apply f between three applicative functors
+            - if arguments weren't applicative, `f x y z`
+         - alternatives
+            - v1: `pure f <*> x <*> y <*> ...`
+            - v2: `fmap f x <*> y <*> ...`
+            - v3: `f <$> x <*> y <*> z`
+
+      - Just examples
+         - ex1: `pure (+3) <*> Just 5`
+            - returns: `Just 8`
+         - ex2: `let x = pure (+3) <*> pure 5`
+            - `x`
+               - returns `8`
+            - `:t x`
+               - `x :: (Num b, Applicative f) => f b`
+            - `fmap (+3) x`
+               - can't do `x + 5`
+         - ex3: `Just (+3) <*> Nothing` or `pure (+3) <*> Nothing`
+            - returns `Nothing`
+         - ex4: `pure (+) <*> Just 3 <*> Just 5`
+            - returns: `Just 8`
+         - ex5: `pure (+) <*> Just 3 <*> Nothing`
+            - returns `Nothing`
+
+      - `<$>` examples:
+         - ex1: `(+3) <$> pure 3`
+         - ex2: `(+3) <$> (+3) <$> Just 5`
+         - ex3: `(++) <$> Just "John" <*> Just "Smith"`
+         - ex4: `(+3) <$> (Just (+5) <*> (pure (+5) <*> Just 3))`
+            - returns `Just 16`
+         - ex5: `(+3) <$> (Just (+5) <*> ((+5) <$> pure 3))`
+         - ex6: `let sum3 a b = (+) (a+b)`
+            - `sum3 1 2 3`
+               - returns `6`
+            - `sum3 <$> pure 1 <*> Just 2 <*> pure 3`
+               - returns `Just 6`
+
+
+      - list examples:
+         - `(+3) <$> [1,2,3]`
+            - returns `[4,5,6]`
+         - `(+) <$> [1,2,3] <*> [3,2,1]`
+            - returns `[4,3,2,5,4,3,6,5,4]`
+            - breakdown
+               - `:t ((+) <$> [1,2,3] <*>)`
+                  - `((<*>) ((<$>) (+) [1,2,3])) :: Num b -> [b] -> [b]`
+               - same as `(map (+) [1,2,3]) <*> [3,2,1]`
+               - same as `[f x | f <- (map (+) [1,2,3]), x <- [3,2,1]]`
+         - `pure (+3) <*> [1,2,3]`
+            - returns `[4,5,6]`
+            - same as `[(+3)] <*> [1,2,3]`
+            - same as `(+3) <$> [1,2,3]`
+         - `pure 3 :: [Int]`
+            - returns `[3]`
+         - `[(*0), (+100), (^2)] <*> [1,2,3]`
+            - returns `[0,0,0,101,102,103,1,4,9]`
+         - `[(+), (*)] <*> [1,2] <*> [3,4]`
+            - returns `[4,5,5,6,3,4,6,8]`
+            - same as `[(+)1, (*)1, (+)2, (*2)] <*> [3,4]`
+         - `(*) <$> [2,5,10] <*> [8,10,11]`
+            - same as `[x*y | x <- [2,5,10], y<-[8,10,11]]`
+         - same as above, but filter
+            - `filter (>50) $ (*) <$> [2,5,10] <*> [8,10,11]`
+
+      - IO Applicative
+         - `<*>` specialized for `IO`
+            - `(<*>) :: IO (a -> b) -> IO a -> IO b`
+
+      - `Control.Applicative.ZipList` Applicative
+         - ZipList is in Control.Applicative
+         - examples:
+            - `pure (+5) <*> (ZipList [1,2,3])`
+               - result: `ZipList {getZipList = [6,8,9]}`
+            - `getZipList $ (+) <$> ZipList [1,2,3] <*> ZipList [100,100,100]`
+               - result: `[101, 102, 103]`
+            -  `getZipList $ ZipList [(+3),(*2)] <*> ZipList [1,2]`
+               - result `[1+3, 2*2]`
+
+      - `Control.Applicative.liftA2`
+         - applies function between 2 applicatives
+         - type sig and defitinition:
+            - `:t liftA2 :: (Applicative f) => (a -> b -> c) -> f a -> f b -> f c`
+            - `:t liftA2 :: (Applicative f) => (a -> b -> c) -> (f a -> f b -> f c)`
+            - `liftA2 f a b = f <$> a <*> b`
+         - usage
+            - ex1:
+               - `getZipList $ liftA2 (+) (ZipList [1,2]) (ZipList [3,4])`
+                  - result: `[4,6]`
+            - ex2:
+               - have `Just 3` and `Just 4`
+               - need to get `Just [3,4]`
+               - `liftA2 (:) (Just 3) (Just [4])`
+               - `(:) <$> Just 3 <*> Just [4]`
+
+
+      - `sequenceA`
+         - transforms list of applicatives into applicative with a list
+         - when using with I/O, `sequenceA` is same as `sequence`
+            - takes a list of I/O actions and returns an I/O action that will
+              perform all actions and have a IO list as result
+
+         - definition
+            - `sequenceA :: (Applicative f) => [f a] -> f [a]`
+            - `sequenceA [] = pure []`
+            - `sequenceA (x:xs) = (:) <$> x <*> sequenceA xs`
+
+         - useful when a list of functions need to feed the same input to all of them, and view list of results
+            - old way: `map (\f -> f 7) [(>4), (<10), odd]`
+               - result: `[True, True, True]`
+            - old way 2: `and $ map (\f -> f 7) [(>4), (<10), odd]`
+               - result: True
+            - new way: `sequenceA [(>4), (<10), odd] 7`
+               - `:t` = `:: Integral a => a -> [Bool]`
+               - result: `[True, True, True]`
+               - turns list `(Num a) => [a -> Bool]` into `(Num a) => a -> [Bool]`
+
+         - usage
+            - ex1: `sequenceA [Just 3, Just 5]`
+               - result: `Just [3,5]`
+            - ex2: `sequenceA [Just 3, Nothing, Just 1]`
+               - result: `Nothing`
+            - ex3: `sequenceA [(+3), (+2), (+1)] 3`
+               - result: `[6,5,4]`
+            - ex4: `sequenceA [getLine, getLine, getLine]`
+
+
+
+   - newtype keyword
+      - wrap existing type in a new type
+      - newtype can have only 1 value constructor and value constructor can only have one field
+      - data keyword has overhead, newtype is faster
+      - ex: `newtype ZipList a = ZipList { getZipList :: [a] }`
+      - can use deriving keyword
+      - using newtype to make type class instance
+         - with maybe, it's simple
+         - tuple instance of Functor
+            - when fmap applied over tuple, it gets applied to first component
+            - `newtype Pair b a = Pair { getPair :: (a,b) }`
+            - ```haskell
+                  instance (Functor (Pair c) where
+                     fmap f (Pair (x,y)) = Pair (f x, y)
+               ```
 - TODO:
    - implement foldl1 foldr1, scans, etc
 

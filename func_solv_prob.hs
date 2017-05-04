@@ -64,7 +64,6 @@ solveRPN2 = head . foldl foldFunc [] . words
 group3s [] = []
 group3s (x:y:z:xs) = (x,y,z) : group3s xs
 
-
 --[10, 90, 2, 8]
 --[50, 30, 90, 2, 8]
 --[10, 30, 5, 40, 10]
@@ -74,8 +73,6 @@ group3s (x:y:z:xs) = (x,y,z) : group3s xs
 
 --([50, 5], [10, 30, 5], [10, 90, 20], [50, 30, 90, 20])
 --([10, 90], [10, 30, 5, 20], [50, 30, 90], [50, 5, 20], [10, 30, 5, 20])
-
-
 
 --getFastestPath :: [Int] -> [Int]
 getFastestPath roadsLst =
@@ -146,5 +143,15 @@ lhData6 = [11, 7, 2, 5, 7, 4, 10, 6, 4, 8, 6, 0]
 
 
 (fastestPath, allPaths) = getFastestPath lhData6
+
+--TODO: http://learnyouahaskell.com/functionally-solving-problems
+--implement book method myself
+
+
+--good grouping algorithms
+groupsOf :: Int -> [a] -> [[a]]
+groupsOf 0 _ = undefined
+groupsOf _ [] = []
+groupsOf n xs = take n xs : groupsOf n (drop n xs)
 
 

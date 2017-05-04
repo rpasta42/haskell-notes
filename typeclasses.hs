@@ -293,8 +293,13 @@ instance Functor (Either a) where
    fmap f (Right x) = Right (f x)
    fmap f (Left x) = Left x
 
+x = fmap (+3) $ Just 5 --x = Just 7
+x = fmap (+3) $ Nothing --x = Nothing
+
+
 --functor laws:
 --identity: fmap (\a -> a) should return same thing
+
 
 
 ---- ### kinds
