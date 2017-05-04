@@ -169,21 +169,57 @@ silent! normal! zE
 567,700fold
 8
 normal! zo
+63
+normal! zo
+63
+normal! zc
 8
 normal! zc
+192
+normal! zo
+192
+normal! zc
+304
+normal! zo
+304
+normal! zc
+344
+normal! zo
+346
+normal! zo
+346
+normal! zc
+404
+normal! zo
+404
+normal! zc
+443
+normal! zo
+443
+normal! zc
+522
+normal! zo
+522
+normal! zc
+344
+normal! zc
 567
 normal! zo
+581
+normal! zo
+581
+normal! zc
 654
 normal! zo
 654
 normal! zc
 567
 normal! zc
-let s:l = 567 - ((394 * winheight(0) + 7) / 14)
+let s:l = 342 - ((335 * winheight(0) + 9) / 19)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-567
+342
 normal! 0
 let &so = s:so_save | let &siso = s:siso_save
 doautoall SessionLoadPost

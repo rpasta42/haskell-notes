@@ -107,190 +107,267 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-7,12fold
-17,21fold
-23,26fold
-28,48fold
-50,52fold
-54,55fold
-14,56fold
-73,78fold
-79,81fold
-82,87fold
-88,108fold
-58,108fold
-58,109fold
-115,129fold
-131,135fold
-137,141fold
-144,161fold
-164,187fold
-162,191fold
-143,191fold
-196,201fold
-202,204fold
-205,207fold
-208,211fold
-212,213fold
-214,217fold
-218,222fold
-223,225fold
-226,227fold
-228,229fold
-230,231fold
-232,234fold
-235,237fold
-238,252fold
-253,257fold
-195,257fold
-193,258fold
-271,275fold
-270,303fold
-260,304fold
-306,313fold
-321,325fold
-326,342fold
-345,348fold
-349,354fold
-355,358fold
-359,362fold
-363,367fold
-368,372fold
-373,378fold
-379,385fold
-386,394fold
-395,401fold
-402,409fold
-402,409fold
-410,413fold
-414,421fold
-422,428fold
-429,435fold
-436,443fold
-444,450fold
-451,457fold
-458,461fold
-462,469fold
-470,478fold
-479,484fold
-485,488fold
-489,496fold
-497,506fold
-507,508fold
-509,510fold
-511,512fold
-513,514fold
-515,516fold
-517,521fold
-522,526fold
-527,531fold
-532,533fold
-534,545fold
-344,546fold
-315,547fold
-549,562fold
-579,583fold
-584,586fold
-570,606fold
-111,608fold
-611,615fold
-617,620fold
-629,635fold
-636,638fold
-639,641fold
-622,642fold
-644,653fold
-655,657fold
-610,658fold
-674,678fold
-680,686fold
-666,687fold
-691,697fold
-699,701fold
-703,710fold
-712,713fold
-715,716fold
-718,721fold
-723,727fold
-729,737fold
-739,743fold
-745,746fold
-689,747fold
-661,763fold
-14
+13,18fold
+24,28fold
+30,33fold
+35,55fold
+57,59fold
+61,62fold
+21,63fold
+80,85fold
+86,88fold
+89,94fold
+95,115fold
+65,115fold
+65,116fold
+122,136fold
+138,142fold
+144,181fold
+189,201fold
+203,208fold
+209,214fold
+215,216fold
+217,221fold
+222,224fold
+225,226fold
+227,228fold
+229,230fold
+231,233fold
+202,234fold
+188,235fold
+238,255fold
+258,281fold
+256,285fold
+237,285fold
+290,295fold
+296,298fold
+299,301fold
+302,305fold
+306,307fold
+308,311fold
+312,316fold
+317,319fold
+320,321fold
+322,323fold
+324,325fold
+326,328fold
+329,331fold
+332,346fold
+347,351fold
+289,351fold
+287,352fold
+365,369fold
+364,397fold
+354,398fold
+400,407fold
+415,419fold
+420,436fold
+439,440fold
+441,444fold
+445,450fold
+451,454fold
+455,458fold
+459,463fold
+464,468fold
+469,474fold
+475,481fold
+482,490fold
+491,497fold
+498,505fold
+498,505fold
+506,509fold
+510,517fold
+518,524fold
+525,531fold
+532,539fold
+540,546fold
+547,553fold
+554,557fold
+558,565fold
+566,574fold
+575,580fold
+581,584fold
+585,592fold
+593,602fold
+603,604fold
+605,606fold
+607,608fold
+609,610fold
+611,612fold
+613,617fold
+618,622fold
+623,627fold
+628,629fold
+630,641fold
+441,642fold
+409,643fold
+645,659fold
+661,677fold
+679,687fold
+689,698fold
+700,720fold
+724,728fold
+731,735fold
+736,738fold
+739,740fold
+741,742fold
+743,744fold
+745,747fold
+748,751fold
+752,753fold
+754,756fold
+757,758fold
+722,759fold
+183,760fold
+118,761fold
+764,768fold
+770,773fold
+782,788fold
+789,791fold
+792,794fold
+775,795fold
+797,806fold
+808,810fold
+763,811fold
+827,831fold
+833,839fold
+819,840fold
+844,850fold
+852,854fold
+856,863fold
+865,866fold
+868,869fold
+871,874fold
+876,880fold
+882,890fold
+892,896fold
+898,899fold
+842,900fold
+903,908fold
+909,913fold
+902,914fold
+814,916fold
+919,928fold
+944,949fold
+951,961fold
+963,982fold
+985,990fold
+992,997fold
+984,998fold
+1009,1017fold
+1019,1026fold
+1028,1035fold
+1037,1047fold
+1049,1064fold
+1066,1078fold
+1065,1079fold
+1080,1104fold
+1106,1108fold
+1110,1118fold
+1120,1135fold
+1148,1156fold
+1137,1166fold
+1000,1167fold
+21
 normal! zo
-14
+21
 normal! zc
-58
+65
 normal! zo
-58
+65
 normal! zo
-58
+118
+normal! zo
+183
+normal! zo
+188
+normal! zo
+202
+normal! zo
+202
 normal! zc
-111
-normal! zo
-143
-normal! zo
-162
-normal! zo
-162
+188
 normal! zc
-143
+237
+normal! zo
+256
+normal! zo
+256
 normal! zc
-193
-normal! zo
-195
-normal! zo
-195
+237
 normal! zc
-193
+287
+normal! zo
+289
+normal! zo
+287
 normal! zc
-260
+354
 normal! zo
-270
+364
 normal! zo
-270
+364
 normal! zc
-260
+354
 normal! zc
-315
+409
 normal! zo
-344
+441
 normal! zo
-402
+498
 normal! zo
-344
+409
 normal! zc
-315
-normal! zc
-570
+722
 normal! zo
-610
-normal! zo
-622
-normal! zo
-622
+722
 normal! zc
-610
+183
 normal! zc
-661
+763
 normal! zo
-666
+775
 normal! zo
-666
-normal! zc
-689
+782
 normal! zo
-689
+775
 normal! zc
-661
+763
 normal! zc
-let s:l = 568 - ((458 * winheight(0) + 16) / 32)
+814
+normal! zo
+819
+normal! zo
+819
+normal! zc
+842
+normal! zo
+842
+normal! zc
+902
+normal! zo
+902
+normal! zc
+984
+normal! zo
+984
+normal! zc
+1000
+normal! zo
+1065
+normal! zo
+1137
+normal! zo
+1137
+normal! zc
+1000
+normal! zc
+let s:l = 1183 - ((246 * winheight(0) + 16) / 32)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-568
-normal! 046|
+1183
+normal! 018|
 let &so = s:so_save | let &siso = s:siso_save
 doautoall SessionLoadPost
 " vim: set ft=vim :
