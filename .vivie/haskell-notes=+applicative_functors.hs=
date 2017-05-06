@@ -107,65 +107,65 @@ setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
 silent! normal! zE
-5,36fold
-46,50fold
-52,55fold
-57,64fold
-39,65fold
-67,87fold
-90,110fold
-3,111fold
-3,111fold
-117,127fold
-131,139fold
-141,145fold
-129,146fold
-150,157fold
-159,171fold
-148,172fold
-181,188fold
-190,194fold
-196,197fold
-174,198fold
-200,205fold
-207,217fold
-115,218fold
-113,219fold
-3
+4,35fold
+45,49fold
+51,54fold
+56,63fold
+38,64fold
+66,86fold
+89,109fold
+2,110fold
+2,110fold
+116,126fold
+130,138fold
+140,144fold
+128,145fold
+149,156fold
+158,170fold
+147,171fold
+180,187fold
+189,193fold
+195,196fold
+173,197fold
+199,204fold
+206,216fold
+114,217fold
+112,218fold
+2
 normal! zo
-3
+2
 normal! zo
-39
+38
 normal! zo
-39
+38
 normal! zc
-3
+2
 normal! zc
-113
+112
 normal! zo
-115
+114
 normal! zo
-129
+128
 normal! zo
-129
+128
 normal! zc
-148
+147
 normal! zo
-148
+147
 normal! zc
-174
+173
 normal! zo
-174
+173
 normal! zc
-115
+114
 normal! zc
-113
+112
 normal! zc
-let s:l = 225 - ((224 * winheight(0) + 18) / 36)
+let s:l = 1 - ((0 * winheight(0) + 9) / 18)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-225
+1
 normal! 0
 let &so = s:so_save | let &siso = s:siso_save
 doautoall SessionLoadPost

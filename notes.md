@@ -1245,17 +1245,90 @@
       - you have an associative binary function
       - a value which acts as identity with respect to that function
 
-   - `Data.Monoid` type class
-      - ```haskell
-         class Monoid m where
-            mempty :: m
-            mappend :: m -> m -> m
-            mconcat :: [m] -> m
-            mconcat = foldr mappend mempty
-         ```
-      - `mempty`
-         - not a function, but a polymorphic constant
+   - `Data.Monoid`
+      - type class
+         ```haskell
+            class Monoid m where
+               mempty :: m
+               mappend :: m -> m -> m
+               mconcat :: [m] -> m
+               mconcat = foldr mappend mempty
+            ```
+         - `mempty`
+            - not a function, but a polymorphic constant
+      - `Product`
+         - ex1: `getProduct $ mappend (Product 3) (Product 9)`
+            - returns `27`
+         - ex2: `getProduct $ mappend (Product 3) mempty`
+            - returns `3`
+         - ex3: `getProduct . mconcat . map Product $ [3,4,2]`
+            - returns `24`
+      - `Sum`
+         - ex1: `getSum $ mappend (Sum 2) (Sum 9)`
+            - returns 11
+      - `Any`
+         - ex1: `getAny $ mappend (Any True) (Any False)`
+            - returns `True`
+         - ex2: `getAny $ mappend mempty (Any True)`
+            - returns `True`
+         - ex3: `getAny . mconcat . map Any $ [False, False, False, True]`
+            - returns `True`
+         - ex4: `getAny $ mappend mempty mempty`
+            - returns `False`
+      - `All`
+         - ex1: `getAll $ mappend mempty (All True)`
+            - returns `True`
+         - ex2: `getAll $ mappend mempty (All False)`
+            - returns `False`
+         - ex3: `getAll . mconcat . map All $ [True, True, True]`
+            - returns `True`
+         - ex4: `getAll . mconcat . map All $ [True, True, False]`
+            - returns `False`
+      - `Ordering` Monoid
+         - compare things based on different criteria
+            - put the criteria in an order
+      - `Maybe` and `First` Monoid
+         - method 1 (default, `Maybe a` where `a` is a Monoid)
+            - ex1: `mappend (Just [5]) (Just [3])`
+               - returns: `Just [5,3]`
+            - ex2: `mappend (Just $ Sum 3) (Just $ Sum 4)`
+               - returns `Just (Sum {getSum = 7})`
+         - method 2 (`First`, returns first value):
+            - ex1: `mappend (First $ Just 5) (First $ Just 65)`
+               - returns: `First {getFirst = Just 5}`
+            - ex2: `getFirst . mconcat . map First $ [Nothing, Just 9, Just 10]`
+               - returns: `Just 9`
+         - method 3 (`Last`):
+            - ex1: `getLast . mconcat . map Last $ [Nothing, Just 9, Just 10]`
+               - returns `Just 10`
+            - ex2: `getLast $ mappend (Last $ Just "one") (Last $ Just "two")`
+               - returns `Just "two"`
 
+
+
+   - `Data.Foldable`
+      - `import qualified Data.Foldable as F`
+      - `Foldable` type class
+         - `foldMap :: (Monoid m, Foldable t) => (a -> m) -> t a -> m`
+            - if this function is implemented, our type becomes instance of `Foldable`
+            - first parameter is a func that
+               - takes value of type that our foldable structure contains
+               - returns a monoid value
+            - second parameter is a foldable structure that contains values of type `a`
+            - maps function over the foldable struct, producing a foldable struct that contains monoid values
+               - then does `mappend` between those monoid values
+
+      - misc
+         - has `foldr`, `foldl`, `foldr1`, `foldl1`
+         - difference with normal fold
+            - `:t foldr :: (a -> b -> b) -> b -> [a] -> b`
+            - `:t F.foldr :: (F.Foldable t) => (a -> b -> b) -> b -> t a -> b`
+
+
+   - Monoid laws
+      - `mappend mempty x` = `x`
+      - `mappend x mempty` = `x`
+      - `mappend (mappend x y) z` = `mappend x (mappend y z)`
 
    - `*` with `1` and `++` with `[]` shared properties
       - function takes 2 parameters
@@ -1268,6 +1341,9 @@
             - the order we apply binary function doesn't matter
          - `(3*2)*(8*5)` = `3*(2*(8*5))`
 
+
+
+- Monads
 
 - TODO:
    - implement foldl1 foldr1, scans, etc

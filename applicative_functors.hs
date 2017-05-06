@@ -1,4 +1,3 @@
-import Data.Monoid
 
 ---- #### Functors
 
@@ -218,8 +217,5 @@ sequenceA = foldr (liftA2 (:)) (pure [])
 
 
 
----- #### Monoids
-
-data MyList a = Cons a | Empty
 
 
