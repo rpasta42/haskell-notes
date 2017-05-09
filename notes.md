@@ -125,6 +125,14 @@
             - `(<$>) :: (Functor f) => (a -> b) -> f a -> f b`
             - `f <$> x = fmap f x`
 
+   - `Data.Monoid` type class
+      - ```haskell
+         class Monoid m where
+            mempty :: m
+            mappend :: m -> m -> m
+            mconcat :: [m] -> m
+            mconcat = foldr mappend mempty
+         ```
 
 
 
@@ -1237,10 +1245,21 @@
       - you have an associative binary function
       - a value which acts as identity with respect to that function
 
+   - `Data.Monoid` type class
+      - ```haskell
+         class Monoid m where
+            mempty :: m
+            mappend :: m -> m -> m
+            mconcat :: [m] -> m
+            mconcat = foldr mappend mempty
+         ```
+
    - `*` with `1` and `++` with `[]` shared properties
       - function takes 2 parameters
       - parameters and return value have the same type
       - there exists a value that doesn't change other values when used with the binary function
+         - `1` is identity with respect to `*`
+         - `[]` is identity with respect to `++`
       - associative
          - when we have 3+ values, and we want to reduce them to single value
             - the order we apply binary function doesn't matter

@@ -114,160 +114,171 @@ silent! normal! zE
 57,59fold
 61,62fold
 21,63fold
+72,76fold
+77,79fold
 80,85fold
 86,88fold
 89,94fold
-95,115fold
-65,115fold
-65,116fold
-122,136fold
-138,142fold
-144,181fold
-189,201fold
-203,208fold
-209,214fold
-215,216fold
-217,221fold
-222,224fold
-225,226fold
-227,228fold
-229,230fold
-231,233fold
-202,234fold
-188,235fold
-238,255fold
-258,281fold
-256,285fold
-237,285fold
-290,295fold
-296,298fold
-299,301fold
-302,305fold
-306,307fold
-308,311fold
-312,316fold
+95,114fold
+65,114fold
+115,117fold
+118,127fold
+128,135fold
+65,136fold
+143,157fold
+159,163fold
+165,202fold
+210,222fold
+224,229fold
+230,235fold
+236,237fold
+238,242fold
+243,245fold
+246,247fold
+248,249fold
+250,251fold
+252,254fold
+223,255fold
+209,256fold
+259,276fold
+279,302fold
+277,306fold
+258,306fold
+311,316fold
 317,319fold
-320,321fold
-322,323fold
-324,325fold
-326,328fold
-329,331fold
-332,346fold
-347,351fold
-289,351fold
-287,352fold
-365,369fold
-364,397fold
-354,398fold
-400,407fold
-415,419fold
-420,436fold
-439,440fold
-441,444fold
-445,450fold
-451,454fold
-455,458fold
-459,463fold
-464,468fold
-469,474fold
-475,481fold
-482,490fold
-491,497fold
-498,505fold
-498,505fold
-506,509fold
-510,517fold
-518,524fold
-525,531fold
-532,539fold
-540,546fold
-547,553fold
-554,557fold
-558,565fold
-566,574fold
-575,580fold
-581,584fold
-585,592fold
-593,602fold
-603,604fold
-605,606fold
-607,608fold
-609,610fold
-611,612fold
-613,617fold
-618,622fold
-623,627fold
+320,322fold
+323,326fold
+327,328fold
+329,332fold
+333,337fold
+338,340fold
+341,342fold
+343,344fold
+345,346fold
+347,349fold
+350,352fold
+353,367fold
+368,372fold
+310,372fold
+308,373fold
+386,390fold
+385,418fold
+375,419fold
+421,428fold
+436,440fold
+441,457fold
+460,461fold
+462,465fold
+466,471fold
+472,475fold
+476,479fold
+480,484fold
+485,489fold
+490,495fold
+496,502fold
+503,511fold
+512,518fold
+519,526fold
+519,526fold
+527,530fold
+531,538fold
+539,545fold
+546,552fold
+553,560fold
+561,567fold
+568,574fold
+575,578fold
+579,586fold
+587,595fold
+596,601fold
+602,605fold
+606,613fold
+614,623fold
+624,625fold
+626,627fold
 628,629fold
-630,641fold
-441,642fold
-409,643fold
-645,659fold
-661,677fold
-679,687fold
-689,698fold
-700,720fold
-724,728fold
-731,735fold
-736,738fold
-739,740fold
-741,742fold
-743,744fold
-745,747fold
-748,751fold
-752,753fold
-754,756fold
-757,758fold
-722,759fold
-183,760fold
-118,761fold
-764,768fold
-770,773fold
-782,788fold
-789,791fold
-792,794fold
-775,795fold
-797,806fold
-808,810fold
-763,811fold
-827,831fold
-833,839fold
-819,840fold
-844,850fold
-852,854fold
-856,863fold
-865,866fold
-868,869fold
-871,874fold
-876,880fold
-882,890fold
-892,896fold
-898,899fold
-842,900fold
-903,908fold
-909,913fold
-902,914fold
-814,916fold
-919,928fold
-944,949fold
-951,961fold
-963,982fold
-985,990fold
-992,997fold
-984,998fold
-1009,1017fold
-1019,1026fold
-1028,1035fold
-1037,1047fold
-1049,1064fold
-1066,1078fold
-1065,1079fold
-1080,1104fold
-1106,1108fold
-1110,1118fold
-1120,1135fold
-1148,1156fold
-1137,1166fold
-1000,1167fold
+630,631fold
+632,633fold
+634,638fold
+639,643fold
+644,648fold
+649,650fold
+651,662fold
+462,663fold
+430,664fold
+666,680fold
+682,698fold
+700,708fold
+710,719fold
+721,741fold
+745,749fold
+752,756fold
+757,759fold
+760,761fold
+762,763fold
+764,765fold
+766,768fold
+769,772fold
+773,774fold
+775,777fold
+778,779fold
+743,780fold
+204,781fold
+139,782fold
+785,789fold
+791,794fold
+803,809fold
+810,812fold
+813,815fold
+796,816fold
+818,827fold
+829,831fold
+784,832fold
+847,851fold
+853,859fold
+839,860fold
+864,870fold
+872,874fold
+876,883fold
+885,886fold
+888,889fold
+891,894fold
+896,900fold
+902,910fold
+912,916fold
+918,919fold
+862,920fold
+923,928fold
+929,933fold
+922,934fold
+834,936fold
+939,948fold
+957,966fold
+968,973fold
+975,985fold
+987,1006fold
+1009,1014fold
+1016,1021fold
+1008,1022fold
+1027,1031fold
+1033,1041fold
+1043,1050fold
+1052,1059fold
+1061,1071fold
+1073,1088fold
+1090,1102fold
+1089,1103fold
+1104,1128fold
+1130,1132fold
+1134,1142fold
+1144,1159fold
+1172,1180fold
+1161,1190fold
+1024,1191fold
+1209,1224fold
+1226,1240fold
+1193,1241fold
+951,1241fold
 21
 normal! zo
 21
@@ -276,98 +287,112 @@ normal! zc
 normal! zo
 65
 normal! zo
-118
-normal! zo
-183
-normal! zo
-188
-normal! zo
-202
-normal! zo
-202
+65
 normal! zc
-188
+139
+normal! zo
+204
+normal! zo
+209
+normal! zo
+223
+normal! zo
+223
 normal! zc
-237
-normal! zo
-256
-normal! zo
-256
+209
 normal! zc
-237
+258
+normal! zo
+277
+normal! zo
+277
 normal! zc
-287
-normal! zo
-289
-normal! zo
-287
+258
 normal! zc
-354
+308
 normal! zo
-364
+310
 normal! zo
-364
+308
 normal! zc
-354
+375
+normal! zo
+385
+normal! zo
+385
 normal! zc
-409
-normal! zo
-441
-normal! zo
-498
-normal! zo
-409
+375
 normal! zc
-722
+430
 normal! zo
-722
+462
+normal! zo
+519
+normal! zo
+430
 normal! zc
-183
+743
+normal! zo
+743
 normal! zc
-763
-normal! zo
-775
-normal! zo
-782
-normal! zo
-775
+204
 normal! zc
-763
+139
 normal! zc
-814
+784
 normal! zo
-819
+796
 normal! zo
-819
+803
+normal! zo
+796
 normal! zc
-842
-normal! zo
-842
+784
 normal! zc
-902
+834
 normal! zo
-902
+839
+normal! zo
+839
 normal! zc
-984
+862
 normal! zo
-984
+862
 normal! zc
-1000
+922
 normal! zo
-1065
-normal! zo
-1137
-normal! zo
-1137
+922
 normal! zc
-1000
+834
 normal! zc
-let s:l = 1183 - ((246 * winheight(0) + 16) / 32)
+951
+normal! zo
+1008
+normal! zo
+1008
+normal! zc
+1024
+normal! zo
+1089
+normal! zo
+1161
+normal! zo
+1161
+normal! zc
+1024
+normal! zc
+1193
+normal! zo
+1193
+normal! zc
+951
+normal! zc
+let s:l = 1247 - ((1235 * winheight(0) + 16) / 32)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1183
-normal! 018|
+1247
+normal! 0
 let &so = s:so_save | let &siso = s:siso_save
 doautoall SessionLoadPost
 " vim: set ft=vim :
