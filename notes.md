@@ -66,12 +66,12 @@
    - Eq, Ord, Show, Read, Enum, Bounded, Num,
      Integral
    - ex 1:
-      ghci> :t (==)
-      (==) :: (Eq a) => a -> a -> Bool
+      - `ghci> :t (==)`
+      - `(==) :: (Eq a) => a -> a -> Bool`
 
    - Ord
       - `compare` returns Ordering type
-         - Ordering: LT, GT, EQ
+         - Ordering: `LT`, `GT`, `EQ`
       - covers >, <, >=, <=
       - to be member of Ordering, a type needs to be part of Eq typeclass
    - Show
@@ -79,29 +79,29 @@
       - uses show function
    - Read
       - opposite of show. takes string and converts to type
-      - ex 1: read "5" + 3.8
-      - ex 2: read "[1, 2, 3]" ++ [3]
-      - ex 3: read "5" :: Int
-      - ex 4: (read "5" :: Float) * 4
+      - ex 1: `read "5" + 3.8`
+      - ex 2: `read "[1, 2, 3]" ++ [3]`
+      - ex 3: `read "5" :: Int`
+      - ex 4: `(read "5" :: Float) * 4`
    - Enum
       - orderable
       - can be used in List ranges
    - Bounded
       - have upper and lower limit
-      - ex 1: minBound :: Int
-      - ex 2: maxBound :: Char
-      - ex 3: maxBound :: (Bool, Int, Char)
-        - out: (True, 2147483648, '\1114111')
+      - ex 1: `minBound :: Int`
+      - ex 2: `maxBound :: Char`
+      - ex 3: `maxBound :: (Bool, Int, Char)`
+        - out: `(True, 2147483648, '\1114111')`
    - Numeric typeclasses
       - Num
          - numeric
          - must already be in Show and Eq typeclasses
-         - ex: ghci> :t (*)
-            (*) :: Num a => a -> a -> a
+         - ex: `ghci> :t (*)`
+            - `(*) :: Num a => a -> a -> a`
          - polymorphic constant
             - can act as any type
-            - ex: ghci> :t 2
-               2 ::(Num t) => t
+            - ex: `ghci> :t 2`
+               - `2 ::(Num t) => t`
       - Integral
          - includes only whole numbers
          - Int and Integer are Integral typeclass
@@ -109,10 +109,23 @@
          - includes only floating point numbers
          - Float and Double are Floating typeclass
       - fromIntegral
-         - takes Integral number and turns it into
-           generic Num
-         - fromIntegral :: (Num b, Integral a) => a -> b
-         - ex: ghci> fromIntegral (length [1, 2, 3]) + 3.2
+         - takes Integral number and turns it into generic Num
+         - `fromIntegral :: (Num b, Integral a) => a -> b`
+         - ex: `ghci> fromIntegral (length [1, 2, 3]) + 3.2`
+   - Functor
+      - fmap
+         - `fmap :: Functor f => (a -> b) -> f a -> f b`
+   - Applicative
+      - `Control.Applicative` module
+      - functions
+         - `pure : a -> f a`
+         - `(<*>) :: f (a -> b) -> f a -> f b`
+         - `(<$>)`
+            - fmap as infix operator
+            - `(<$>) :: (Functor f) => (a -> b) -> f a -> f b`
+            - `f <$> x = fmap f x`
+
+
 
 
 - Modules
@@ -810,7 +823,6 @@
       need to make define their type signatures
 
 
-
 - IO
    - compiling single file
       - `ghc --make filenoextname`
@@ -928,18 +940,22 @@
    - re-thrown uncaught exceptions
 
 
-- Applicative Functors/Monoids
+- Applicative Functors
    - fmap
       - `fmap :: Functor f => (a -> b) -> f a -> f b`
    - a functor is like a box
       - proper term computational context
+
    - to make type constructor instance of Functor, it needs kind `* -> *`
       - i.e. take 1 concrete type as type parameter
       - ex: `instance Functor Maybe where`
       - if takes 2 type parameters, we need to partially apply it
          - ex:
-            - `instance Functor (Either a) where`
-            - `fmap :: (b -> c) -> Either a b -> Either a c`
+            - ```haskell
+               instance Functor (Either a) where
+                  fmap :: (b -> c) -> Either a b ->
+                  Either a c
+               ```
 
    - `IO`
       - `:t fmap`
@@ -1176,11 +1192,61 @@
          - with maybe, it's simple
          - tuple instance of Functor
             - when fmap applied over tuple, it gets applied to first component
-            - `newtype Pair b a = Pair { getPair :: (a,b) }`
             - ```haskell
+                  newtype Pair b a = Pair { getPair :: (a,b) }`
                   instance (Functor (Pair c) where
                      fmap f (Pair (x,y)) = Pair (f x, y)
                ```
+
+      - newtype vs data
+         - ```haskell
+            helloMe :: CoolBool -> String
+            helloMe (CoolBool _) = "hello"
+            ```
+         - ```haskell
+            data CoolBool = CoolBool { getCoolBool :: Bool }
+            helloMe undefined
+            ```
+            - returns `*** Exception: Prelude.undefined`
+         - ``haskell
+            newtype CoolBool = CoolBool { getCoolBool :: Bool }
+            helloMe undefined
+            ```
+            - returns `"hello"`
+
+
+      - `type` vs `newtype` vs `data`
+         - `type`
+            - `type` is for making type synonyms
+               - `type IntList = [Int]`
+            - can be used interchangeable with old type
+            - no new constructor
+            - makes type signatures more descriptive
+         - `newtype`
+            - taking existing types and wrapping them in new types
+            - makes it easier to make types instances of certain type classes
+            - cannot use interchangeably
+            - record syntax gives a function for extracting value of original type
+         - `data`
+            - making new types
+            - can have many constructors and fields
+
+
+- Monoids
+   - a monoid is when:
+      - you have an associative binary function
+      - a value which acts as identity with respect to that function
+
+   - `*` with `1` and `++` with `[]` shared properties
+      - function takes 2 parameters
+      - parameters and return value have the same type
+      - there exists a value that doesn't change other values when used with the binary function
+      - associative
+         - when we have 3+ values, and we want to reduce them to single value
+            - the order we apply binary function doesn't matter
+         - `(3*2)*(8*5)` = `3*(2*(8*5))`
+
+
 - TODO:
    - implement foldl1 foldr1, scans, etc
 
