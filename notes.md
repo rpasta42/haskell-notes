@@ -1253,6 +1253,9 @@
             mconcat :: [m] -> m
             mconcat = foldr mappend mempty
          ```
+      - `mempty`
+         - not a function, but a polymorphic constant
+
 
    - `*` with `1` and `++` with `[]` shared properties
       - function takes 2 parameters

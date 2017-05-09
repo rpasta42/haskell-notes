@@ -1,3 +1,4 @@
+import Data.Monoid
 
 ---- #### Functors
 
@@ -215,5 +216,10 @@ sequenceA :: (Applicative f) => [f a] -> f [a]
 sequenceA = foldr (liftA2 (:)) (pure [])
 
 
+
+
+---- #### Monoids
+
+data MyList a = Cons a | Empty
 
 
