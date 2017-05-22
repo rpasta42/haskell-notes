@@ -212,7 +212,7 @@ normal! zo
 normal! zc
 333
 normal! zc
-let s:l = 216 - ((0 * winheight(0) + 23) / 46)
+let s:l = 216 - ((0 * winheight(0) + 15) / 31)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt

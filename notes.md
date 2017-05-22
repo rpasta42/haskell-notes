@@ -1344,6 +1344,28 @@
 
 
 - Monads
+   - if we have a value with a context, `m a`, how do we apply it to a function which takes a normal `a` and returns a value with a context
+      - how do we apply `a -> m b` to a value of type `m a`
+   - bind
+      - `:t (>>=)`
+         - `(>>=) :: (Monad m) => m a -> (a -> m b) -> m b`
+   - typeclass
+      - should be `class (Applicative m) => Monad m where`
+         - due to historic reasons, applicatives didn't exist so Monad doesn't have Applicative constraint
+         - every monad is applicative functor in practice
+      - ```haskell
+         class Monad m where
+            return :: a -> m a
+
+            (>>=) :: m a -> (a -> m b) -> m b
+
+            (>>) :: m a -> m b -> m b
+            x >> y = x >>= \_ -> y
+
+            fail :: String -> m a
+            fail msg = error msg
+         ```
+
 
 - TODO:
    - implement foldl1 foldr1, scans, etc
