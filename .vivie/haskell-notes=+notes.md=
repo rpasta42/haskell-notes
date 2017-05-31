@@ -308,10 +308,8 @@ normal! zo
 normal! zo
 223
 normal! zo
-223
-normal! zc
-209
-normal! zc
+250
+normal! zo
 258
 normal! zo
 277
@@ -348,6 +346,8 @@ normal! zo
 normal! zc
 204
 normal! zc
+139
+normal! zc
 784
 normal! zo
 796
@@ -372,8 +372,6 @@ normal! zc
 normal! zo
 922
 normal! zc
-834
-normal! zc
 951
 normal! zo
 1008
@@ -390,9 +388,9 @@ normal! zc
 normal! zc
 1193
 normal! zo
+1209
+normal! zo
 1193
-normal! zc
-951
 normal! zc
 1243
 normal! zo
@@ -400,12 +398,14 @@ normal! zo
 normal! zo
 1248
 normal! zc
-let s:l = 1347 - ((105 * winheight(0) + 22) / 45)
+1243
+normal! zc
+let s:l = 1346 - ((425 * winheight(0) + 19) / 39)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1347
-normal! 046|
+1346
+normal! 08|
 let &so = s:so_save | let &siso = s:siso_save
 doautoall SessionLoadPost
 " vim: set ft=vim :
