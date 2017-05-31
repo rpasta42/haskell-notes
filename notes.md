@@ -1060,7 +1060,7 @@
 
       - Functors & Applicatives and `<$>`
          - `<$>` is fmap as infix operator
-         - `f <*> x` = `fmap f x`
+         - `f <$> x` = `fmap f x`
          - `pure f <*> x` = `fmap f x`
             - pure puts values in default context
          - `f <$> x <*> y <*> z` to apply f between three applicative functors

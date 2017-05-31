@@ -143,7 +143,6 @@ instance Applicative [] where
    fs <*> xs = [f x | f <- fs, x <- xs]
 
 
-
 -- # IO applicative
 
 --ex4 (IO as applicative):
